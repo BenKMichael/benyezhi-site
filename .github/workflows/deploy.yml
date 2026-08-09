@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           source: "html/*"
-          target: "/var/www/html"
+          target: "/var/www"
           strip_components: 1
 
       - name: Restart Service via SSH
