@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yezhi Wu - Personal Homepage</title>
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --border-color: #e9ecef;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        nav {
+            background-color: #1a252f;
+            padding: 0.75rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #3498db;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .badge-list span {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #334155;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin: 0.2rem;
+        }
+
+        .interactive-box {
+            background: #eef6ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #004999;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Yezhi Wu</h1>
+        <p>Computer Science Student @ UC San Diego | Systems Enthusiast</p>
+    </header>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <main>
+        <section id="about">
+            <h2>About Me</h2>
+            <p>
+                Hi! I am a CS student at UC San Diego with 3+ years of teaching/tutoring experience and a solid
+                background in full-stack web development. After working in industry for several years, I returned to
+                academia to focus on <strong>Computer Systems, Operating Systems, and Distributed Computing</strong>.
+            </p>
+
+        </section>
+
+        <section id="education">
+            <h2>Education</h2>
+            <div class="card">
+                <h3>University of California, San Diego</h3>
+                <p><strong>B.S. in Computer Science</strong> (Expected May 2027)</p>
+                <p>Focus Areas: Operating Systems, Computer Architecture, Distributed Systems</p>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2>Technical Focus</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h3>Languages</h3>
+                    <div class="badge-list">
+                        <span>C/C++</span>
+                        <span>Go</span>
+                        <span>Python</span>
+                        <span>Java</span>
+                        <span>C#</span>
+                        <span>JavaScript/TypeScript</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Tools & Frameworks</h3>
+                    <div class="badge-list">
+                        <span>Linux Kernel</span>
+                        <span>Docker</span>
+                        <span>Git</span>
+                        <span>ASP.NET Core</span>
+                        <span>React</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2>Featured Research & Work</h2>
+            <p>Click the button below to toggle details about my current research interests:</p>
+            <h4>Systems Research & Network Sandbox</h4>
+            <p>Currently exploring kernel-level optimizations, far memory systems, and building custom network
+                sandboxes in Go.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Contact & Links</h2>
+            <ul>
+                <li>Email: <a href="mailto:yew020@ucsd.edu">yew020@ucsd.edu</a></li>
+                <li>LinkedIn: <a href="https://www.linkedin.com/in/yezhi-wu/" target="_blank"
+                        rel="noopener noreferrer">yezhi-wu</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Yezhi Wu. Hosted on CSE 135 Server.</p>
+    </footer>
+
+</body>
+
+</html>
