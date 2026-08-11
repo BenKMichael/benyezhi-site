@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benjamin Michael's Homepage</title>
+    <style>
+        body {
+            font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+            background-color: #00ff99;
+            background-image: repeating-linear-gradient(45deg, #00ff99 0px, #00ff99 20px, #33ffcc 20px, #33ffcc 40px);
+            color: #330066;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3.2rem;
+            color: #ff0099;
+            text-shadow: 3px 3px 0 #ffff00, -2px -2px 0 #00ccff;
+            padding-top: 1rem;
+            margin-bottom: 0;
+        }
+
+        .tagline {
+            text-align: center;
+            font-weight: bold;
+            color: #003399;
+            background: yellow;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border: 2px dashed red;
+        }
+
+        .tagline-wrap {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .construction {
+            text-align: center;
+            background: black;
+            color: yellow;
+            font-weight: bold;
+            padding: 6px;
+            border-top: 4px solid red;
+            border-bottom: 4px solid red;
+            animation: flicker 1.2s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0.4; }
+        }
+
+        nav {
+            background-color: #000080;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #00ffff;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 0 12px;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: #ff00ff;
+            text-decoration: underline wavy;
+        }
+
+        main {
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        section {
+            background: #fffbe6;
+            border: 4px ridge #cc6600;
+            padding: 1rem 1.3rem;
+            margin-bottom: 1.8rem;
+        }
+
+        h2 {
+            color: #cc0066;
+            font-size: 1.8rem;
+            border-bottom: 3px dotted #339900;
+            display: inline-block;
+        }
+
+        .about-box {
+            border: 3px dashed #6600cc;
+            background: #f0e6ff;
+            padding: 1rem;
+            font-style: italic;
+        }
+
+        .edu-card {
+            background: #e6f2ff;
+            padding: 0.8rem;
+            border-left: 6px solid #0033cc;
+        }
+
+        ul.game-list {
+            list-style-type: "🏆 ";
+            padding-left: 1.5rem;
+        }
+
+        ul.game-list li {
+            margin-bottom: 6px;
+            font-size: 1.05rem;
+        }
+
+        .project-box {
+            background: #1a1a1a;
+            color: #00ff00;
+            font-family: "Courier New", monospace;
+            padding: 1.2rem;
+            border: 3px solid lime;
+            font-size: 1.05rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #330066;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        hr {
+            border: 3px dotted #ff6600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Benjamin Michael</h1>
+    <div class="tagline-wrap">
+        <span class="tagline">Computer Science Student @ UC San Diego</span>
+    </div>
+    <div class="construction">*** UNDER CONSTRUCTION ***</div>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#achievements">Achievements</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <main>
+        <section id="about">
+            <h2>About Me</h2>
+            <div class="about-box">
+                <p>Transfer student going into my senior year here at UCSD. Born and raised in San Francisco currently being cooked
+                    by the lukewarm Summer of San Diego. I like videogames, manga, puzzles, peanut butter pretzels, the gym (from time to time),
+                    and a few other things. Hope to round out my domain knowledge of computer science topics this year and dive more deeply into projects.
+                </p>
+            </div>
+        </section>
+
+        <section id="education">
+            <h2>Education</h2>
+            <div class="edu-card">
+                <h3>University of California, San Diego</h3>
+                <p><strong>B.S. in Computer Science</strong> (Expected 2026)</p>
+                <p>Focus Areas: Still ironing things out. Have a budding interest in biomedical
+                    equipment and ML applications, specifically as it pertains to type 1 diabetic issues like blood
+                    glucose prediction and insulin policy (sister is T1D). </p>
+            </div>
+        </section>
+
+        <section id="achievements">
+            <h2>Binding of Isaac Achievements</h2>
+            <ul class="game-list">
+                <li><strong>Keeper now holds... A Penny!</strong> &mdash; Defeat Hush as Keeper</li>
+                <li><strong>The Necronomicon</strong> &mdash; Use XIII - Death 4 times</li>
+                <li><strong>Special Hanging Shopkeepers</strong> &mdash; Donate 14 coins to Greed Donation Machine</li>
+                <li><strong>Abel</strong> &mdash; Defeat The Lamb as Cain</li>
+                <li><strong>Curved Horn</strong> &mdash; Defeat The Lamb as Judas</li>
+                <li><strong>Blue Womb</strong> &mdash; Defeat Mom's Heart 10 times</li>
+                <li><strong>Keeper Holds Store Key</strong> &mdash; Defeat Satan as Keeper</li>
+                <li><strong>Lucky Pennies</strong> &mdash; Donate 2 coins to Greed Donation Machine</li>
+                <li><strong>Everything Is Terrible!!!</strong> &mdash; Defeat Mom's Heart 5 times</li>
+                <li><strong>Dark Boy</strong> &mdash; Beat Chapter 3 without taking damage</li>
+                <li><strong>Key Bum</strong> &mdash; Defeat Ultra Greed as Lazarus</li>
+                <li><strong>Stud Finder</strong> &mdash; Complete BRAINS! (challenge #27)</li>
+                <li><strong>Something Icky</strong> &mdash; Defeat Isaac 10 times</li>
+                <li><strong>Counterfeit Coin</strong> &mdash; Play Shell Game or Hell Game 100 times</li>
+                <li><strong>Bloody Lust</strong> &mdash; Defeat Isaac as Samson</li>
+                <li><strong>Judas' Tongue</strong> &mdash; Defeat Satan as Judas</li>
+                <li><strong>Poker Chip</strong> &mdash; Complete I RULE! (challenge #26)</li>
+                <li><strong>Wooden Nickel</strong> &mdash; Donate 33 coins to Greed Donation Machine</li>
+                <li><strong>Samson</strong> &mdash; Complete 2 floors in a row without taking damage</li>
+                <li><strong>Empty Vessel</strong> &mdash; Defeat Hush as Lazarus</li>
+                <li><strong>Super Greed Baby</strong> &mdash; Defeat Mom's Heart or It Lives! on Hard mode as Keeper</li>
+                <li><strong>The Parasite</strong> &mdash; Pick up 2 dead-related items in a single run</li>
+                <li><strong>2 More New Pills</strong> &mdash; Complete Have a Heart (challenge #25)</li>
+                <li><strong>Karma</strong> &mdash; Defeat The Lamb as Keeper</li>
+                <li><strong>Immaculate Conception</strong> &mdash; Complete Boss Rush as Lilith</li>
+                <li><strong>Get out of Jail Free Card</strong> &mdash; Complete SPEED! (challenge #22)</li>
+                <li><strong>Mr. Mega</strong> &mdash; Destroy 10 Tinted Rocks</li>
+                <li><strong>Goat Head Baby</strong> &mdash; Defeat Mom's Heart or It Lives! on Hard mode as Lilith</li>
+                <li><strong>A Quarter</strong> &mdash; Defeat Mom's Heart 8 times</li>
+                <li><strong>???</strong> &mdash; Defeat Mom's Heart 10 times</li>
+                <li><strong>Maggy's Faith</strong> &mdash; Defeat The Lamb as Magdalene</li>
+                <li><strong>A Bag of Pennies</strong> &mdash; Defeat Isaac as Cain</li>
+                <li><strong>Sacrificial Dagger</strong> &mdash; Defeat ??? as Eve</li>
+                <li><strong>Green Baby</strong> &mdash; Defeat Mega Satan as Cain</li>
+                <li><strong>The D20</strong> &mdash; Defeat ??? as Isaac</li>
+                <li><strong>Serpent's Kiss</strong> &mdash; Defeat Satan as Lilith</li>
+                <li><strong>Red Baby</strong> &mdash; Defeat Mega Satan as Magdalene</li>
+                <li><strong>D12</strong> &mdash; Defeat Hush as Cain</li>
+                <li><strong>Long Baby</strong> &mdash; Defeat Mega Satan as Lazarus</li>
+                <li><strong>Little C.H.A.D.</strong> &mdash; Defeat C.H.A.D.</li>
+                <li><strong>Blood Rights</strong> &mdash; Defeat Satan as Samson</li>
+                <li><strong>Evil Eye</strong> &mdash; Defeat Ultra Greed as Cain</li>
+                <li><strong>Eve</strong> &mdash; Don't pick up any hearts for 2 floors in a row</li>
+                <li><strong>Maw of the Void</strong> &mdash; Defeat Hush as Azazel</li>
+                <li><strong>Zodiac</strong> &mdash; Defeat Ultra Greed as The Lost</li>
+                <li><strong>A Noose</strong> &mdash; Defeat Mom's Heart 3 times</li>
+                <li><strong>Judas</strong> &mdash; Defeat Satan</li>
+                <li><strong>Cracked Dice</strong> &mdash; Defeat Ultra Greed as ???</li>
+                <li><strong>A Fetus in a Jar</strong> &mdash; Defeat Mom's Heart 9 times</li>
+                <li><strong>Burnt Penny</strong> &mdash; Complete Beans! (challenge #13)</li>
+                <li><strong>Something From The Future</strong> &mdash; Beat Basement 40 times</li>
+                <li><strong>The Harbingers</strong> &mdash; Defeat Mom</li>
+                <li><strong>The D6</strong> &mdash; Defeat Isaac as ???</li>
+                <li><strong>Mom's Knife</strong> &mdash; Defeat Satan as Isaac</li>
+                <li><strong>Little Steven</strong> &mdash; Defeat Steven</li>
+                <li><strong>Lil' Chubby</strong> &mdash; Beat Chapter 2</li>
+                <li><strong>The Nail</strong> &mdash; Complete the Boss Rush as Azazel</li>
+                <li><strong>Cain</strong> &mdash; Hold 55 Coins at one time</li>
+                <li><strong>Epic Fetus</strong> &mdash; Complete The Family Man (challenge #19)</li>
+                <li><strong>GB Bug</strong> &mdash; Defeat Ultra Greed as Eden</li>
+                <li><strong>Rib of Greed</strong> &mdash; Defeat Ultra Greed as Keeper</li>
+                <li><strong>The Womb</strong> &mdash; Defeat Mom</li>
+                <li><strong>Lusty Blood</strong> &mdash; Defeat Ultra Greed as Samson</li>
+                <li><strong>A Cube of Meat</strong> &mdash; Defeat Mom</li>
+                <li><strong>Betrayal</strong> &mdash; Defeat Hush as Judas</li>
+                <li><strong>Blue Candle</strong> &mdash; Donate 900 coins to the Donation Machine</li>
+                <li><strong>1001%</strong> &mdash; Unlock all Afterbirth secrets and endings, collect every item</li>
+                <li><strong>The Book of Sin</strong> &mdash; Defeat all 7 Deadly Sins</li>
+                <li><strong>Lil' Chest</strong> &mdash; Defeat Ultra Greed as Isaac</li>
+                <li><strong>Lil' Baby</strong> &mdash; Defeat Mega Satan as Eve</li>
+                <li><strong>Loki's Horns</strong> &mdash; Defeat Lokii</li>
+                <li><strong>SMB Super Fan</strong> &mdash; Complete It's in the Cards (challenge #14)</li>
+                <li><strong>A Forgotten Horseman</strong> &mdash; Take 10 Angel Room items</li>
+                <li><strong>Rune Bag</strong> &mdash; Defeat Isaac (Boss) as Lilith</li>
+                <li><strong>Eden's Blessing</strong> &mdash; Defeat Hush as Eden</li>
+                <li><strong>My Shadow</strong> &mdash; Defeat Ultra Greed as Judas</li>
+                <li><strong>Guardian Angel</strong> &mdash; Defeat Satan as Magdalene</li>
+                <li><strong>Blood Penny</strong> &mdash; Defeat ??? as Samson</li>
+                <li><strong>Guppy's Hairball</strong> &mdash; Become Guppy</li>
+                <li><strong>D8</strong> &mdash; Complete PRIDE DAY! (challenge #28)</li>
+                <li><strong>Lucky Toe</strong> &mdash; Blow up 20 Shopkeepers</li>
+                <li><strong>Black Feather</strong> &mdash; Defeat Ultra Greed as Eve</li>
+                <li><strong>The Razor</strong> &mdash; Defeat Satan as Eve</li>
+                <li><strong>Celtic Cross</strong> &mdash; Defeat ??? as Magdalene</li>
+                <li><strong>Noose Baby</strong> &mdash; Defeat Mega Satan as Keeper</li>
+                <li><strong>The Scissors</strong> &mdash; Die 100 times</li>
+                <li><strong>Demon Baby</strong> &mdash; Defeat The Lamb as Azazel</li>
+                <li><strong>2 New Pills</strong> &mdash; Complete PAY TO PLAY (challenge #24)</li>
+                <li><strong>Little Gish</strong> &mdash; Defeat Gish</li>
+                <li><strong>Mama's Boy</strong> &mdash; Beat Chapter 4 without taking damage</li>
+            </ul>
+            <p style="text-align:center; font-size:1.4rem; font-weight:bold; color:#cc0066;">+ more</p>
+        </section>
+
+        <section id="projects">
+            <h2>Projects</h2>
+            <div class="project-box">
+                <p>TODO?</p>
+            </div>
+        </section>
+
+        <hr>
+
+        <section id="contact">
+            <h2>Contact</h2>
+            <ul>
+                <li>Email: <a href="mailto:bemichael@ucsd.edu">bemichael@ucsd.edu</a></li>
+                <li>LinkedIn: <a href="www.linkedin.com/in/benkmichael">www.linkedin.com/in/benkmichael</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Benjamin Michael. Hosted on CSE 135 Server.
+    </footer>
+
+</body>
+
+</html>
