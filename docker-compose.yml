@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cse135
+    ports:
+      - "8080:80"
+    volumes:
+      - ./apache.conf:/etc/apache2/sites-available/000-default.conf:ro
+    restart: unless-stopped
