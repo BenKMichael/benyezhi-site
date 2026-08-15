@@ -13,12 +13,56 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy via SSH for html
-        uses: appleboy/scp-action@v0.1.7
+      - name: Set up Golang
+        uses: actions/setup-go@v5
         with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          source: "html/*"
-          target: "/var/www/html"
-          strip_components: 1
+          go-version: '1.22'
+      
+      - name: Build GO CGI Binaries
+        run: |
+          mkdir -p build_output/cgi-bin
+          if [ -d "go-cgi" ]; then
+            cd go-cgi
+            for file in *.go; do
+              if [ -f "$file" ]; then
+                name=$(basename "$file" .go)
+                echo "Building $file -> ../build_output/cgi-bin/go-${name}.cgi"
+                CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o "../build_output/cgi-bin/go-${name}.cgi" "$file"
+              fi
+            done
+            cd ..
+          fi
+      - name: Build Artifacts
+        run: |
+          mkdir -p deploy_pkg/html
+          mkdir -p deploy_pkg/cgi-bin
+
+          # copy static files
+          if [ -d "html" ]; then
+            cp -r html/* deploy_pkg/html/
+          fi
+
+          # copy perl files
+          if [ -d "perl-cgi" ]; then
+            cp -r perl-cgi/* deploy_pkg/cgi-bin/
+          fi
+
+          # copy go files
+          cp -r build_output/cgi-bin/* deploy_pkg/cgi-bin/
+      - name: Deploy via SSH
+        uses: easingthemes/ssh-deploy@v5.0.3
+        with:
+          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          REMOTE_PORT: ${{ secrets.DEPLOY_PORT }}
+          SOURCE: "deploy_pkg/"
+          TARGET: "/tmp/deploy_pkg"
+          SCRIPT_AFTER: |
+            echo "Copying files as non-root user..."
+            mkdir -p /var/www/html/cgi-bin
+            cp -r /tmp/deploy_pkg/html/* /var/www/html/
+            cp -r /tmp/deploy_pkg/cgi-bin/* /var/www/html/cgi-bin/
+            chmod +x /var/www/html/cgi-bin/*
+            rm -rf /tmp/deploy_pkg
+            echo "Deploy finished!"
