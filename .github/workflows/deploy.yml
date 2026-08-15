@@ -23,14 +23,15 @@ jobs:
           mkdir -p build_output/cgi-bin
           if [ -d "go-cgi" ]; then
             cd go-cgi
-            for file in *.go; do
-              if [ -f "$file" ]; then
-                name=$(basename "$file" .go)
-                echo "Building $file -> ../build_output/cgi-bin/go-${name}.cgi"
-                CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o "../build_output/cgi-bin/go-${name}.cgi" "$file"
-              fi
+            find . -type f -name "*.go" | while read -r file; do
+              name=$(basename "$file" .go)
+              echo "Building $file -> ../build_output/cgi-bin/go-${name}.cgi"
+              CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o "../build_output/cgi-bin/go-${name}.cgi" "$file"
             done
+
             cd ..
+          else
+            echo "Warning: go-cgi directory not found!"
           fi
       - name: Build Artifacts
         run: |
@@ -39,16 +40,16 @@ jobs:
 
           # copy static files
           if [ -d "html" ]; then
-            cp -r html/* deploy_pkg/html/
+            cp -r html/. deploy_pkg/html/
           fi
 
           # copy perl files
           if [ -d "perl-cgi" ]; then
-            cp -r perl-cgi/* deploy_pkg/cgi-bin/
+            cp -r perl-cgi/. deploy_pkg/cgi-bin/
           fi
 
           # copy go files
-          cp -r build_output/cgi-bin/* deploy_pkg/cgi-bin/
+          cp -r build_output/cgi-bin/. deploy_pkg/cgi-bin/
       - name: Deploy via SSH
         uses: easingthemes/ssh-deploy@v5.0.3
         with:
