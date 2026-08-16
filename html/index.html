@@ -10,32 +10,75 @@
 </head>
 
 <body>
-  <div class="grid-container">
-    <div class="item course">
-      <h1>CSE 135</h1>
-      <h2>Summer 2026</h2>
-      <script>
-        document.write(`Live @ ${new Date()}`);
-      </script>
+  <header>
+    <div class="grid-container">
+      <div class="course">
+        <h1>CSE 135</h1>
+        <h2>Summer 2026</h2>
+        <p id="live-time"></p>
+      </div>
+
+      <div class="team">
+        <h2>Team Benyezhi</h2>
+        <p class="section-label">Team Members</p>
+        <ul>
+          <li><a href="members/yezhi.html">Yezhi Wu</a></li>
+          <li><a href="members/ben.html">Ben</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="item team">
-      <h1>Team Benyezhi</h1>
-      <p>Temm Member</p>
-      <ul>
-        <li><a href="members/yezhi.html">Yezhi Wu</a></li>
-        <li><a href="members/ben.html">Ben</a></li>
-      </ul>
-    </div>
-    <div class="item homework">
+  </header>
+
+  <main>
+    <div class="homework">
       <div class="section">
         <h2>Homework 1</h2>
-        <ul>
+        <ul class="hw1-links">
           <li><a href="hw1/hello.php">PHP</a></li>
           <li><a href="hw1/report.html">Report.html</a></li>
         </ul>
       </div>
+
+      <div class="section">
+        <h2>Homework 2</h2>
+        <div class="hw-group grid-container">
+          <div class="hw-item">
+            <h3>Perl (example)</h3>
+            <ul>
+              <li><a href="/cgi-bin/perl-hello-html-world.pl">Perl Hello HTML World</a></li>
+              <li><a href="/cgi-bin/perl-hello-json-world.pl">Perl Hello JSON World</a></li>
+              <li><a href="/cgi-bin/perl-destroy-session.pl">Perl Destroy Session</a></li>
+              <li><a href="/cgi-bin/perl-env-pm.pl">Perl Environment (PM)</a></li>
+              <li><a href="/cgi-bin/perl-env.pl">Perl Environment</a></li>
+              <li><a href="/cgi-bin/perl-general-echo.pl">Perl General Echo</a></li>
+              <li><a href="/cgi-bin/perl-get-echo.pl">Perl GET Echo</a></li>
+              <li><a href="/cgi-bin/perl-post-echo.pl">Perl POST Echo</a></li>
+              <li><a href="/cgi-bin/perl-sessions-1.pl">Perl Sessions 1</a></li>
+              <li><a href="/cgi-bin/perl-sessions-2.pl">Perl Sessions 2</a></li>
+            </ul>
+          </div>
+          <div class="hw-item">
+            <h3>PHP</h3>
+            <ul>
+              <li><a href="hw2/php/hello.php">Script Output</a></li>
+              <li><a href="hw2/php/report.html">Report.html</a></li>
+            </ul>
+          </div>
+          <div class="hw-item">
+            <h3>Golang</h3>
+            <ul>
+              <li><a href="/cgi-bin/go-hello-html.cgi">Golang Hello World</a></li>
+              <li><a href="/cgi-bin/go-hello-json.cgi">Golang Hello World (JSON)</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </main>
+
+  <script>
+    document.getElementById('live-time').innerText = `Live @ ${new Date().toLocaleString()}`;
+  </script>
 </body>
 
 </html>
