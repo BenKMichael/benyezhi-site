@@ -20,11 +20,11 @@ jobs:
       
       - name: Build GO CGI Binaries
         run: |
-          mkdir -p build_output
+          mkdir -p go_output
           if [ -d "go-cgi" ]; then
             cd go-cgi
-            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build_output/ ./cmd/...
-            cd ../build_output
+            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../go_output/ ./cmd/...
+            cd ../go_output
             for bin in *; do
               if [ -f "$bin" ] && [[ "$bin" != *.cgi ]]; then
                 mv "$bin" "go-${bin}.cgi"
@@ -52,7 +52,7 @@ jobs:
           fi
 
           # copy go files
-          cp -r build_output/cgi-bin/. deploy_pkg/cgi-bin/
+          cp -r go_output/. deploy_pkg/cgi-bin/
       - name: Deploy via SSH
         uses: easingthemes/ssh-deploy@v5.0.3
         with:
