@@ -23,13 +23,14 @@ jobs:
           mkdir -p build_output/cgi-bin
           if [ -d "go-cgi" ]; then
             cd go-cgi
-            find . -type f -name "*.go" | while read -r file; do
-              name=$(basename "$file" .go)
-              echo "Building $file -> ../build_output/cgi-bin/go-${name}.cgi"
-              CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o "../build_output/cgi-bin/go-${name}.cgi" "$file"
+            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build_output/cgi-bin/ ./cmd/...
+            cd ../build_output/cgi-bin
+            for bin in *; do
+              if [ -f "$bin" ] && [[ "$bin" != *.cgi ]]; then
+                mv "$bin" "${bin}.cgi"
+              fi
             done
-
-            cd ..
+            cd ../..
           else
             echo "Warning: go-cgi directory not found!"
           fi
