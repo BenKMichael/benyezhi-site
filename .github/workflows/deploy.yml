@@ -27,7 +27,7 @@ jobs:
             cd ../build_output/cgi-bin
             for bin in *; do
               if [ -f "$bin" ] && [[ "$bin" != *.cgi ]]; then
-                mv "$bin" "${bin}.cgi"
+                mv "$bin" "$go-{bin}.cgi"
               fi
             done
             cd ../..
