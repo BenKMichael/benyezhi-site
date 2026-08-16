@@ -27,7 +27,7 @@ func handler(w http.ResponseWriter, r* http.Request){
 	for _, env := range envs {
 		key, val, found := strings.Cut(env, "=")
 		if found {
-			fmt.Fprintf(os.Stdout, "<b>%s:</b> %s<br />\n", key, val)
+			fmt.Fprintf(w, "<b>%s:</b> %s<br />\n", key, val)
 		}
 	}
 	
