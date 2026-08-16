@@ -20,17 +20,17 @@ jobs:
       
       - name: Build GO CGI Binaries
         run: |
-          mkdir -p build_output/cgi-bin
+          mkdir -p build_output
           if [ -d "go-cgi" ]; then
             cd go-cgi
-            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build_output/cgi-bin/ ./cmd/...
-            cd ../build_output/cgi-bin
+            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build_output/ ./cmd/...
+            cd ../build_output
             for bin in *; do
               if [ -f "$bin" ] && [[ "$bin" != *.cgi ]]; then
-                mv "$bin" "$go-{bin}.cgi"
+                mv "$bin" "go-${bin}.cgi"
               fi
             done
-            cd ../..
+            cd ../
           else
             echo "Warning: go-cgi directory not found!"
           fi
@@ -42,11 +42,13 @@ jobs:
           # copy static files
           if [ -d "html" ]; then
             cp -r html/. deploy_pkg/html/
+            echo "Copied static files."
           fi
 
           # copy perl files
           if [ -d "perl-cgi" ]; then
             cp -r perl-cgi/. deploy_pkg/cgi-bin/
+            echo "Copied perl files."
           fi
 
           # copy go files
