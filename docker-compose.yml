@@ -9,5 +9,6 @@ services:
     ports:
       - "8080:80"
     volumes:
+      - ./html:/var/www/html:ro
       - ./apache.conf:/etc/apache2/sites-available/000-default.conf:ro
     restart: unless-stopped
