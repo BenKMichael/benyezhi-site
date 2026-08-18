@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Echo Form</title>
+</head>
+
+<body>
+
+    <h2>Echo Form Test</h2>
+
+    <form id="echoForm">
+        <p>
+            <label>Endpoint URL:</label><br>
+            <input type="text" id="endpoint" value="/cgi-bin/go-general-echo.cgi" style="width: 300px;">
+        </p>
+        <p>
+            <label>HTTP Method:</label><br>
+            <select id="method">
+                <option value="GET">GET</option>
+                <option value="POST" selected>POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+        </p>
+        <p>
+            <label>Content-Type:</label><br>
+            <select id="contentType">
+                <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+                <option value="application/json">application/json</option>
+            </select>
+        </p>
+        <p>
+            <label>Name:</label><br>
+            <input type="text" id="name" value="Alice">
+        </p>
+        <p>
+            <label>Message:</label><br>
+            <input type="text" id="message" value="Hello World">
+        </p>
+        <p>
+            <button type="submit">Submit</button>
+        </p>
+    </form>
+
+    <hr>
+    <h3>Response:</h3>
+    <pre id="output" style="background: #f4f4f4; padding: 10px;"></pre>
+
+    <script>
+        document.getElementById('echoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const url = document.getElementById('endpoint').value;
+            const method = document.getElementById('method').value;
+            const contentType = document.getElementById('contentType').value;
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+
+            let fetchUrl = url;
+            let options = { method: method };
+
+            if (method === 'GET') {
+                const params = new URLSearchParams({ name, message });
+                fetchUrl += '?' + params.toString();
+            } else {
+                options.headers = { 'Content-Type': contentType };
+                if (contentType === 'application/json') {
+                    options.body = JSON.stringify({ name, message });
+                } else {
+                    options.body = new URLSearchParams({ name, message }).toString();
+                }
+            }
+
+            try {
+                const res = await fetch(fetchUrl, options);
+                const text = await res.text();
+                document.getElementById('output').innerText = text;
+            } catch (err) {
+                document.getElementById('output').innerText = 'Error: ' + err.message;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
