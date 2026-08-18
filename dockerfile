@@ -20,6 +20,8 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y --no-install-recommends \
     perl \
     libjson-perl \
+    libcgi-pm-perl \
+    libcgi-session-perl \
     && rm -rf /var/lib/apt/lists/* \
     && (a2enmod cgi || a2enmod cgid)
 
