@@ -51,6 +51,12 @@ jobs:
             echo "Copied perl files."
           fi
 
+          # copy php files
+          if [ -d "php-cgi" ]; then
+            cp -r php-cgi/. deploy_pkg/cgi-bin/
+            echo "Copied PHP files."
+          fi
+
           # copy go files
           cp -r go_output/. deploy_pkg/cgi-bin/
       - name: Deploy via SSH

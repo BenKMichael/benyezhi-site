@@ -33,6 +33,7 @@ RUN mkdir -p /usr/bin/cgi-bin
 
 COPY html/ /var/www/html
 COPY perl-cgi/ /usr/bin/cgi-bin/
+COPY php-cgi /usr/bin/cgi-bin/
 COPY --from=go-builder /out/ /usr/bin/cgi-bin/
 
 RUN chmod +x /usr/bin/cgi-bin/* && \
