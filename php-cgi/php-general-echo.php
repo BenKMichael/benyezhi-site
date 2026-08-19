@@ -19,5 +19,10 @@ $formData = file_get_contents('php://input');
 <p><b>HTTP Method:</b> <?php echo htmlspecialchars($method); ?></p>
 <p><b>Query String:</b> <?php echo htmlspecialchars($queryString); ?></p>
 <p><b>Message Body:</b> <?php echo htmlspecialchars($formData); ?></p>
+
+<p><b>Hostname:</b> <?php echo htmlspecialchars($hostname); ?></p>
+<p><b>Date & Time:</b> <?php echo htmlspecialchars($dateTime); ?></p>
+<p><b>User Agent:</b> <?php echo htmlspecialchars($userAgent); ?></p>
+<p><b>IP Address:</b> <?php echo htmlspecialchars($ipAddress); ?></p>
 </body>
 </html>
