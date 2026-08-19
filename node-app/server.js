@@ -72,6 +72,7 @@ app.get('/env', (req, res) => {
 app.all('/echo', express.text({ type: '*/*' }), (req, res) => {
     const protocol = `HTTP/${req.protocol.toUpperCase()}`;
     const query = req.url.split('?')[1] || '';
+    const now = new Date().toString();
 
     res.send(`
         <!DOCTYPE html>
@@ -83,10 +84,15 @@ app.all('/echo', express.text({ type: '*/*' }), (req, res) => {
         <p><b>HTTP Method:</b> ${protocol}</p>
         <p><b>Query String:</b> ${query}</p>
         <p><b>Message Body:</b> ${req.body || ''}</p>
+        <p><b>Hostname:</b> ${req.hostname}</p>
+        <p><b>Date/Time:</b> ${now}</p>
+        <p><b>User Agent:</b> ${req.headers['user-agent']}</p>
+        <p><b>IP Address:</b> ${req.ip}</p>
         </body>
         </html>
     `);
 });
+
 
 app.get('/session', (req, res) => {
     res.send(`
