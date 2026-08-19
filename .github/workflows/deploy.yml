@@ -59,6 +59,14 @@ jobs:
 
           # copy go files
           cp -r go_output/. deploy_pkg/cgi-bin/
+
+          # copy node app files
+          if [ -d "node-app" ]; then
+            mkdir -p deploy_pkg/node-app
+            cp -r node-app/. deploy_pkg/node-app/
+            echo "Copied Node.js app files."
+          fi
+
       - name: Deploy via SSH
         uses: easingthemes/ssh-deploy@v5.0.3
         with:
@@ -75,4 +83,12 @@ jobs:
             cp -r /tmp/deploy_pkg/cgi-bin/* /var/www/html/cgi-bin/
             chmod +x /var/www/html/cgi-bin/*
             rm -rf /tmp/deploy_pkg
+            echo "Deploy finished!"
+            
+            echo "Deploying Node.js app..."
+            mkdir -p ~/benyezhi-site/node-app
+            cp -r /tmp/deploy_pkg/node-app/* ~/benyezhi-site/node-app/
+            cd ~/benyezhi-site/node-app
+            npm ci --omit=dev
+            pm2 restart node-app
             echo "Deploy finished!"
