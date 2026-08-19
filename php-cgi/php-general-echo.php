@@ -6,6 +6,11 @@ $protocol = $_SERVER['SERVER_PROTOCOL'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'] ?? '';
 $queryString = $_SERVER['QUERY_STRING'] ?? '';
 
+$hostname = gethostname();
+$dateTime = date('Y-m-d H:i:s T');
+$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+$ipAddress = $_SERVER['REMOTE_ADDR'] ?? '';
+
 $formData = file_get_contents('php://input');
 ?>
 <!DOCTYPE html>
