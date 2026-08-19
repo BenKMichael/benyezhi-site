@@ -7,6 +7,7 @@ import (
 	"net/http/cgi"
 	"os"
 	"strconv"
+	"time"
 )
 
 func handler(w http.ResponseWriter, r* http.Request){
@@ -42,6 +43,16 @@ func handler(w http.ResponseWriter, r* http.Request){
 		}
 	}
 	fmt.Fprintf(w, "<p><b>Message Body:</b> %s</p>\n", formData)
+
+	hostname, _ := os.Hostname()
+	dateTime := time.Now().Format("2006-01-02 15:04:05 MST")
+	userAgent := os.Getenv("HTTP_USER_AGENT")
+	ipAddress := os.Getenv("REMOTE_ADDR")
+
+	fmt.Fprintf(w, "<p><b>Hostname:</b> %s</p>\n", hostname)
+	fmt.Fprintf(w, "<p><b>Date & Time:</b> %s</p>\n", dateTime)
+	fmt.Fprintf(w, "<p><b>User Agent:</b> %s</p>\n", userAgent)
+	fmt.Fprintf(w, "<p><b>IP Address:</b> %s</p>\n", ipAddress)
 
 	fmt.Fprintf(w, "</body>")
 	fmt.Fprintf(w, "</html>")
