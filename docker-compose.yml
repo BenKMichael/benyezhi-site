@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   web:
     build:
@@ -11,4 +9,13 @@ services:
     volumes:
       - ./html:/var/www/html:ro
       - ./apache.conf:/etc/apache2/sites-available/000-default.conf:ro
+    restart: unless-stopped
+
+  node:
+    build:
+      context: ./node-app
+    container_name: cse135-node
+    volumes:
+      - ./node-app:/app
+      - /app/node_modules
     restart: unless-stopped

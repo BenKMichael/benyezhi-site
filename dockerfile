@@ -23,7 +23,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcgi-pm-perl \
     libcgi-session-perl \
     && rm -rf /var/lib/apt/lists/* \
-    && (a2enmod cgi || a2enmod cgid)
+    && (a2enmod cgi || a2enmod cgid) \
+    && a2enmod proxy proxy_http
 
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
