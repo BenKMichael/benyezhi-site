@@ -82,13 +82,14 @@ jobs:
             cp -r /tmp/deploy_pkg/html/* /var/www/html/
             cp -r /tmp/deploy_pkg/cgi-bin/* /var/www/html/cgi-bin/
             chmod +x /var/www/html/cgi-bin/*
-            rm -rf /tmp/deploy_pkg
-            echo "Deploy finished!"
-            
+
             echo "Deploying Node.js app..."
             mkdir -p ~/benyezhi-site/node-app
             cp -r /tmp/deploy_pkg/node-app/* ~/benyezhi-site/node-app/
             cd ~/benyezhi-site/node-app
             npm ci --omit=dev
             pm2 restart node-app
+
+            rm -rf /tmp/deploy_pkg
             echo "Deploy finished!"
+
