@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'html/**'
+      - 'perl-cgi/**'
+      - 'php-cgi/**'
+      - 'go-cgi/**'
+      - 'node-app/**'
+
 
 jobs:
   build-and-deploy:
