@@ -19,3 +19,14 @@ services:
       - ./node-app:/app
       - /app/node_modules
     restart: unless-stopped
+  
+  reporting:
+    build:
+      context: ./reporting.benyezhi.site/node-app/
+      dockerfile: Dockerfile
+    container_name: reporting-site
+    ports:
+      - "4001:3000"
+    # environment:
+    #   - NODE_ENV=production
+    restart: always
