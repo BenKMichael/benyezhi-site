@@ -36,4 +36,4 @@ jobs:
           script: |
             cd /var/www/reporting.benyezhi.site/node-app
             npm install --production
-            pm2 restart reporting-api || pm2 start DEPLOY.js --name reporting-api
+            pm2 restart reporting-api || pm2 start server.js --name reporting-api
