@@ -95,7 +95,8 @@ jobs:
             cp -r /tmp/deploy_pkg/node-app/* ~/benyezhi-site/node-app/
             cd ~/benyezhi-site/node-app
             npm ci --omit=dev
-            pm2 restart node-app
+            pm2 restart node-app || pm2 start server.js --name node-app
+            pm2 save
 
             rm -rf /tmp/deploy_pkg
             echo "Deploy finished!"

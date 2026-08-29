@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-    
+
       - name: Copy via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -26,4 +26,15 @@ jobs:
           target: "/var/www/collector.benyezhi.site/"
           strip_components: 1
 
-
+      - name: Install dependencies & restart PM2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd /var/www/collector.benyezhi.site/node-app
+            npm install --omit=dev
+            pm2 restart collector-api || pm2 start server.js --name collector-api
+            pm2 save

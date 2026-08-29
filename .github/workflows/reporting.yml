@@ -35,5 +35,6 @@ jobs:
           port: ${{ secrets.DEPLOY_PORT }}
           script: |
             cd /var/www/reporting.benyezhi.site/node-app
-            npm install --production
+            npm install --omit=dev
             pm2 restart reporting-api || pm2 start server.js --name reporting-api
+            pm2 save
