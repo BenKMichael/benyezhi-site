@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = false;
 (function () {
     const ENDPOINT_URL = "https://collector.benyezhi.site/log";
     const enterTime = new Date().toISOString();
