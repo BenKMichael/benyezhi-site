@@ -1,0 +1,39 @@
+name: Deploy Reporting Directory Only
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'reporting.benyezhi.site/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy reporting folder to DEPLOY via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          source: "reporting.benyezhi.site/*" 
+          target: "/var/www/reporting.benyezhi.site"
+          strip_components: 1
+
+      - name: Install dependencies & Restart PM2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd /var/www/reporting.benyezhi.site/node-app
+            npm install --production
+            pm2 restart reporting-api || pm2 start DEPLOY.js --name reporting-api
