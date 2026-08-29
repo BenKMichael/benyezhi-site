@@ -26,7 +26,32 @@ services:
       dockerfile: Dockerfile
     container_name: reporting-site
     ports:
-      - "4001:3000"
-    # environment:
-    #   - NODE_ENV=production
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+
+  collector:
+    build:
+      context: ./collector.benyezhi.site/node-app/
+      dockerfile: Dockerfile
+    container_name: collector-site
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: always
