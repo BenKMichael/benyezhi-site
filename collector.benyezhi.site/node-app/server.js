@@ -3,7 +3,7 @@ const express = require('express');
 const mysql = require('mysql2/promise')
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Trust proxy: Needed to retain user IP address for database writes
 app.set('trust proxy', 1);
