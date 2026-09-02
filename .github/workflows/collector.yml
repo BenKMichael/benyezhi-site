@@ -28,13 +28,19 @@ jobs:
 
       - name: Install dependencies & restart PM2 via SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          COLLECTOR_ENV: ${{ secrets.COLLECTOR_ENV }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
+          envs: COLLECTOR_ENV
           script: |
             cd /var/www/collector.benyezhi.site/node-app
+            echo "$COLLECTOR_ENV" > .env
+            chmod 600 .env
             npm install --omit=dev
-            pm2 restart collector-api || pm2 start server.js --name collector-api
+            pm2 delete collector-api || true
+            pm2 start server.js --name collector-api
             pm2 save
