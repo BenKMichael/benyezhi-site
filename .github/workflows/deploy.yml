@@ -10,6 +10,7 @@ on:
       - 'benyezhi.site/php-cgi/**'
       - 'benyezhi.site/go-cgi/**'
       - 'benyezhi.site/node-app/**'
+  workflow_dispatch:
 
 
 jobs:

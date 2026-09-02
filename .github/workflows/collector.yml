@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'collector.benyezhi.site/**'
+  workflow_dispatch:
 
 jobs:
   build-collector:
