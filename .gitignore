@@ -1,3 +1,9 @@
 .DS_Store
 node_modules
 .env
+
+# Database dumps (real data -- password hashes, actual events) belong on
+# a developer's machine only, never in the repo. Matches files directly in
+# database/ (e.g. analytics_db_dump.sql) without touching database/init/,
+# which holds the actual committed schema/seed scripts.
+database/*.sql

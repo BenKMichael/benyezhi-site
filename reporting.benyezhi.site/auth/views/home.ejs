@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Reporting Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <style>
         body {
             font-family: sans-serif;
@@ -35,19 +36,41 @@
             padding: 1.5rem;
         }
 
+        .widget.wide {
+            grid-column: 1 / -1;
+        }
+
         .widget h2 {
             margin-top: 0;
             font-size: 1.1rem;
             color: #2c3e50;
         }
 
-        .widget .placeholder {
-            color: #999;
-            font-size: 0.9rem;
-            padding: 2rem 0;
-            text-align: center;
-            border: 1px dashed #ddd;
-            border-radius: 4px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 240px;
+        }
+
+        th {
+            color: #777;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
         }
     </style>
 </head>
@@ -61,19 +84,55 @@
 
         <div class="widget-grid">
             <div class="widget">
+                <h2>Events Over Time</h2>
+                <canvas id="eventsOverTimeChart"></canvas>
+            </div>
+            <div class="widget">
+                <h2>Event Type Breakdown</h2>
+                <canvas id="eventTypeChart"></canvas>
+            </div>
+            <div class="widget">
+                <h2>Browser Capabilities</h2>
+                <canvas id="capabilityChart"></canvas>
+            </div>
+
+            <div class="widget wide">
                 <h2>Recent Events</h2>
-                <div class="placeholder">Event data will be loaded here</div>
+                <div class="table-wrap">
+                    <table id="eventsGrid">
+                        <thead>
+                            <tr>
+                                <th>Session</th>
+                                <th>Type</th>
+                                <th>URL</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="widget">
-                <h2>Visitor Sessions</h2>
-                <div class="placeholder">Session data will be loaded here</div>
-            </div>
-            <div class="widget">
-                <h2>Device / Browser Breakdown</h2>
-                <div class="placeholder">Static profile data will be loaded here</div>
+
+            <div class="widget wide">
+                <h2>Recent Sessions</h2>
+                <div class="table-wrap">
+                    <table id="sessionsGrid">
+                        <thead>
+                            <tr>
+                                <th>Session</th>
+                                <th>User Agent</th>
+                                <th>Language</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
+
+    <script src="/dashboard.js"></script>
 </body>
 
 </html>

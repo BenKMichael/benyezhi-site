@@ -1,4 +1,4 @@
-.PHONY: up down restart build rebuild logs clean clean-all shell
+.PHONY: up down restart build rebuild logs clean clean-all shell load-prod-dump
 
 up:
 	docker compose up -d
@@ -31,3 +31,13 @@ clean-all:
 
 shell:
 	docker exec -it cse135 /bin/sh
+
+# Loads database/analytics_db_dump.sql into the running local mysql-db
+# container. On-demand only -- NOT part of database/init/, since that
+# directory is the reproducible baseline (a fresh `down -v && up` should
+# always give the clean seed data, not whatever happened to be in
+# production when the dump was taken). Run this only when you specifically
+# want to test against real data; it overwrites local's current
+# users/events/sessions tables.
+load-prod-dump:
+	docker exec -i mysql_service mysql -u root -prootpassword analytics_db < database/analytics_db_dump.sql
