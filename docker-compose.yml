@@ -2,29 +2,61 @@
 services:
   web:
     build:
-      context: .
+      context: ./benyezhi.site
       dockerfile: Dockerfile
     container_name: cse135
     ports:
       - "8080:80"
     volumes:
-      - ./html:/var/www/html:ro
-      - ./apache.conf:/etc/apache2/sites-available/000-default.conf:ro
+      - ./benyezhi.site/html:/var/www/html:ro
+      - ./benyezhi.site/apache.conf:/etc/apache2/sites-available/000-default.conf:ro
+    depends_on:
+      - auth
+      - reporting
     restart: unless-stopped
 
-  node:
+  auth:
     build:
-      context: ./reporting.benyezhi.site/node-app
-    container_name: cse135-node
+      context: ./reporting.benyezhi.site/auth
+    container_name: cse135-auth
     ports:
       - "3000:3000"
     volumes:
-      # - ./node-app:/app
       - /app/node_modules
     env_file:
-      - ./reporting.benyezhi.site/node-app/.env
+      - ./reporting.benyezhi.site/auth/.env
+    depends_on:
+      - mysql-db
     restart: unless-stopped
-  
+
+  reporting:
+    build:
+      context: ./reporting.benyezhi.site/reporting
+    container_name: cse135-reporting
+    ports:
+      - "3002:3002"
+    volumes:
+      - /app/node_modules
+    env_file:
+      - ./reporting.benyezhi.site/reporting/.env
+    depends_on:
+      - mysql-db
+    restart: unless-stopped
+
+  collector:
+    build:
+      context: ./collector.benyezhi.site/node-app
+    container_name: cse135-collector
+    ports:
+      - "3001:3001"
+    volumes:
+      - /app/node_modules
+    env_file:
+      - ./collector.benyezhi.site/node-app/.env
+    depends_on:
+      - mysql-db
+    restart: unless-stopped
+
   mysql-db:
     image: mysql:8.0
     container_name: mysql_service
@@ -32,12 +64,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: analytics_db
-      MYSQL_USER: app_user
-      MYSQL_PASSWORD: your_actual_password
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./reporting.benyezhi.site/sql_scripts:/docker-entrypoint-initdb.d:ro
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+
 volumes:
   mysql_data:

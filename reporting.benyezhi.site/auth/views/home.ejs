@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logged Out - Analytics Platform</title>
+    <title>Home - Reporting Platform</title>
     <style>
         body {
             font-family: sans-serif;
@@ -16,7 +16,7 @@
             background: #f4f6f8;
         }
 
-        .logout-card {
+        .home-card {
             background: #fff;
             padding: 2.5rem;
             border-radius: 8px;
@@ -37,7 +37,7 @@
             margin-bottom: 2rem;
         }
 
-        .btn-login {
+        .btn-logout {
             display: inline-block;
             padding: 0.75rem 1.5rem;
             background: #0066cc;
@@ -47,17 +47,17 @@
             font-weight: bold;
         }
 
-        .btn-login:hover {
+        .btn-logout:hover {
             background: #0052a3;
         }
     </style>
 </head>
 
 <body>
-    <div class="logout-card">
-        <h2>Logged Out</h2>
-        <p>You have successfully logged out.</p>
-        <a href="/login" class="btn-login">Sign Back In</a>
+    <div class="home-card">
+        <h2>Welcome, <%= user.username %></h2>
+        <p>You're signed in to the Reporting Platform.</p>
+        <a href="/logout" class="btn-logout">Log Out</a>
     </div>
 </body>
 

@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'wrecked-tech/**'
+      - 'test.benyezhi.site/**'
 
 jobs:
   build-test-site:
@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
-          source: "wrecked-tech/*"
+          source: "test.benyezhi.site/*"
           target: "/var/www/test.benyezhi.site/html"
           strip_components: 1
 

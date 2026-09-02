@@ -59,6 +59,32 @@ function formatStaticRecord(row) {
     };
 }
 
+// Reads a "static" event row (collector.js's device/browser fingerprint,
+// stored in events.data as JSON) and shapes it like formatStaticRecord.
+function formatEventAsStatic(row) {
+    if (!row) return null;
+    let data = row.data;
+    if (typeof data === 'string') {
+        try { data = JSON.parse(data); } catch (_) { data = {}; }
+    }
+    data = data || {};
+
+    return {
+        id: row.id,
+        sessionId: row.session_id,
+        userAgent: data.userAgent,
+        language: data.language,
+        cookiesAllowed: Boolean(data.cookiesAllowed),
+        javascriptAllowed: Boolean(data.javascriptAllowed),
+        imagesAllowed: Boolean(data.imagesAllowed),
+        cssAllowed: Boolean(data.cssAllowed),
+        screenDimensions: data.screenDimensions,
+        windowDimensions: data.windowDimensions,
+        networkConnection: data.networkConnection,
+        createdAt: row.server_timestamp
+    };
+}
+
 let mockStaticRecords = [
     {
         id: 1,
@@ -82,14 +108,14 @@ app.get('/api/static', async (req, res) => {
 
     try {
         const [rows] = await pool.query(
-            'SELECT * FROM static_data ORDER BY id DESC LIMIT ? OFFSET ?',
+            "SELECT * FROM events WHERE type = 'static' ORDER BY id DESC LIMIT ? OFFSET ?",
             [limit, offset]
         );
         return res.status(200).json({
             status: 'success',
             source: 'database',
             count: rows.length,
-            data: rows.map(formatStaticRecord)
+            data: rows.map(formatEventAsStatic)
         });
     } catch (err) {
         console.warn('[Fallback Warning] DB query failed, serving mock data:', err.message);
@@ -108,9 +134,9 @@ app.get('/api/static/:identifier', async (req, res) => {
 
     try {
         const sql = isNumeric
-            ? 'SELECT * FROM static_data WHERE id = ? LIMIT 1'
-            : 'SELECT * FROM static_data WHERE session_id = ? OR sessionId = ? LIMIT 1';
-        const params = isNumeric ? [parseInt(identifier, 10)] : [identifier, identifier];
+            ? "SELECT * FROM events WHERE id = ? AND type = 'static' LIMIT 1"
+            : "SELECT * FROM events WHERE session_id = ? AND type = 'static' ORDER BY id DESC LIMIT 1";
+        const params = [isNumeric ? parseInt(identifier, 10) : identifier];
 
         const [rows] = await pool.query(sql, params);
         if (rows.length === 0) {
@@ -119,7 +145,7 @@ app.get('/api/static/:identifier', async (req, res) => {
         return res.status(200).json({
             status: 'success',
             source: 'database',
-            data: formatStaticRecord(rows[0])
+            data: formatEventAsStatic(rows[0])
         });
     } catch (err) {
         console.warn('[Fallback Warning] DB query failed, serving mock data:', err.message);
@@ -145,43 +171,33 @@ app.post('/api/static', async (req, res) => {
         return res.status(400).json({ status: 'error', message: 'sessionId is required' });
     }
 
+    const staticData = {
+        userAgent: body.userAgent || body.user_agent || null,
+        language: body.language || null,
+        cookiesAllowed: Boolean(body.cookiesAllowed),
+        javascriptAllowed: body.javascriptAllowed !== false,
+        imagesAllowed: body.imagesAllowed !== false,
+        cssAllowed: body.cssAllowed !== false,
+        screenDimensions: body.screenDimensions || body.screen_dimensions || null,
+        windowDimensions: body.windowDimensions || body.window_dimensions || null,
+        networkConnection: body.networkConnection || body.network_connection || null
+    };
+
     try {
-        const query = `
-            INSERT INTO static_data 
-            (session_id, user_agent, language, cookies_allowed, javascript_allowed, images_allowed, css_allowed, screen_dimensions, window_dimensions, network_connection, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(3))
-            ON DUPLICATE KEY UPDATE
-            user_agent = VALUES(user_agent),
-            screen_dimensions = VALUES(screen_dimensions),
-            window_dimensions = VALUES(window_dimensions),
-            network_connection = VALUES(network_connection)
-        `;
-
-        const stringifyIfNeeded = (v) => (typeof v === 'object' && v !== null ? JSON.stringify(v) : (v || null));
-
-        const params = [
-            sessionId,
-            body.userAgent || body.user_agent || null,
-            body.language || null,
-            body.cookiesAllowed ? 1 : 0,
-            body.javascriptAllowed !== false ? 1 : 0,
-            body.imagesAllowed !== false ? 1 : 0,
-            body.cssAllowed !== false ? 1 : 0,
-            stringifyIfNeeded(body.screenDimensions || body.screen_dimensions),
-            stringifyIfNeeded(body.windowDimensions || body.window_dimensions),
-            stringifyIfNeeded(body.networkConnection || body.network_connection)
-        ];
-
-        const [result] = await pool.query(query, params);
+        const [result] = await pool.query(
+            `INSERT INTO events (session_id, type, url, client_timestamp, server_timestamp, ip, data)
+             VALUES (?, 'static', ?, NOW(3), NOW(3), ?, ?)`,
+            [sessionId, body.url || null, req.ip, JSON.stringify(staticData)]
+        );
         return res.status(201).json({
             status: 'success',
             source: 'database',
-            data: { id: result.insertId, sessionId, ...body }
+            data: { id: result.insertId, sessionId, ...staticData, createdAt: new Date().toISOString() }
         });
     } catch (err) {
         console.warn('[Fallback Warning] DB insert failed, writing to mock array:', err.message);
         const newId = mockStaticRecords.length > 0 ? Math.max(...mockStaticRecords.map(r => r.id)) + 1 : 1;
-        const newRecord = { id: newId, ...body, sessionId, createdAt: new Date().toISOString() };
+        const newRecord = { id: newId, sessionId, ...staticData, createdAt: new Date().toISOString() };
         mockStaticRecords.push(newRecord);
         return res.status(201).json({
             status: 'success',
@@ -194,7 +210,7 @@ app.post('/api/static', async (req, res) => {
 app.delete('/api/static/:id', async (req, res) => {
     const id = parseInt(req.params.id, 10);
     try {
-        const [result] = await pool.query('DELETE FROM static_data WHERE id = ?', [id]);
+        const [result] = await pool.query("DELETE FROM events WHERE id = ? AND type = 'static'", [id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ status: 'error', message: 'Record not found in DB' });
         }
@@ -263,7 +279,7 @@ app.get('/api/session/:sessionId/timeline', async (req, res) => {
 
     try {
         const [staticRows] = await pool.query(
-            'SELECT * FROM static_data WHERE session_id = ? LIMIT 1',
+            "SELECT * FROM events WHERE session_id = ? AND type = 'static' LIMIT 1",
             [sessionId]
         );
 
@@ -275,7 +291,7 @@ app.get('/api/session/:sessionId/timeline', async (req, res) => {
         return res.status(200).json({
             status: 'success',
             sessionId: sessionId,
-            deviceInfo: staticRows.length > 0 ? formatStaticRecord(staticRows[0]) : null,
+            deviceInfo: staticRows.length > 0 ? formatEventAsStatic(staticRows[0]) : null,
             totalEvents: eventRows.length,
             timeline: eventRows.map(e => ({
                 id: e.id,

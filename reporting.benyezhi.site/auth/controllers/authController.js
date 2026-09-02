@@ -2,6 +2,10 @@ const bcrypt = require('bcryptjs');
 const db = require('../db');
 const { SESSION_COOKIE_NAME } = require('../config/constants');
 
+exports.getHome = (req, res) => {
+    res.render('home', { user: req.session.user });
+};
+
 exports.getLogin = (req, res) => {
     if (req.session && req.session.user) {
         return res.redirect('/');

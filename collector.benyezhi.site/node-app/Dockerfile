@@ -1,4 +1,3 @@
-# 1. 基础环境
 FROM node:18-alpine
 
 WORKDIR /app
@@ -8,5 +7,5 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
-CMD ["node", "app.js"]
+EXPOSE 3001
+CMD ["node", "server.js"]
