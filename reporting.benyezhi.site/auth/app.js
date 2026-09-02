@@ -11,7 +11,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     name: SESSION_COOKIE_NAME,
@@ -20,12 +19,13 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        secure: false, // set ture for https
+        secure: process.env.COOKIE_SECURE === 'true',
         maxAge: 24 * 60 * 60 * 1000 //One day
     }
 }));
 
 app.use('/', authRoutes);
+app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 3000;
 

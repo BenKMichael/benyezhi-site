@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - 'html/**'
-      - 'perl-cgi/**'
-      - 'php-cgi/**'
-      - 'go-cgi/**'
-      - 'node-app/**'
+      - 'benyezhi.site/html/**'
+      - 'benyezhi.site/perl-cgi/**'
+      - 'benyezhi.site/php-cgi/**'
+      - 'benyezhi.site/go-cgi/**'
+      - 'benyezhi.site/node-app/**'
 
 
 jobs:
@@ -28,10 +28,10 @@ jobs:
       - name: Build GO CGI Binaries
         run: |
           mkdir -p go_output
-          if [ -d "go-cgi" ]; then
-            cd go-cgi
-            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../go_output/ ./cmd/...
-            cd ../go_output
+          if [ -d "benyezhi.site/go-cgi" ]; then
+            cd benyezhi.site/go-cgi
+            CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../../go_output/ ./cmd/...
+            cd ../../go_output
             for bin in *; do
               if [ -f "$bin" ] && [[ "$bin" != *.cgi ]]; then
                 mv "$bin" "go-${bin}.cgi"
@@ -39,7 +39,7 @@ jobs:
             done
             cd ../
           else
-            echo "Warning: go-cgi directory not found!"
+            echo "Warning: benyezhi.site/go-cgi directory not found!"
           fi
       - name: Build Artifacts
         run: |
@@ -47,20 +47,20 @@ jobs:
           mkdir -p deploy_pkg/cgi-bin
 
           # copy static files
-          if [ -d "html" ]; then
-            cp -r html/. deploy_pkg/html/
+          if [ -d "benyezhi.site/html" ]; then
+            cp -r benyezhi.site/html/. deploy_pkg/html/
             echo "Copied static files."
           fi
 
           # copy perl files
-          if [ -d "perl-cgi" ]; then
-            cp -r perl-cgi/. deploy_pkg/cgi-bin/
+          if [ -d "benyezhi.site/perl-cgi" ]; then
+            cp -r benyezhi.site/perl-cgi/. deploy_pkg/cgi-bin/
             echo "Copied perl files."
           fi
 
           # copy php files
-          if [ -d "php-cgi" ]; then
-            cp -r php-cgi/. deploy_pkg/cgi-bin/
+          if [ -d "benyezhi.site/php-cgi" ]; then
+            cp -r benyezhi.site/php-cgi/. deploy_pkg/cgi-bin/
             echo "Copied PHP files."
           fi
 
@@ -68,9 +68,9 @@ jobs:
           cp -r go_output/. deploy_pkg/cgi-bin/
 
           # copy node app files
-          if [ -d "node-app" ]; then
+          if [ -d "benyezhi.site/node-app" ]; then
             mkdir -p deploy_pkg/node-app
-            cp -r node-app/. deploy_pkg/node-app/
+            cp -r benyezhi.site/node-app/. deploy_pkg/node-app/
             echo "Copied Node.js app files."
           fi
 

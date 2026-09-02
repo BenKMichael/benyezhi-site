@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Password: Test1234!
-INSERT INTO users (username, email, password_hash, is_admin)
+INSERT INTO users (username, email, password_hash, role)
 VALUES 
-    ('yezhi', 'yew020@ucsd.edu', '$2b$10$wJ2vUfO93KfZYw2Y3n/6gugv8M9f1dZlZke9H6qGqV0kC/d7V5d6K', 65535)
+    ('yezhi', 'yew020@ucsd.edu', '$2b$10$O1WZNKWIL3gfO/Tk4ZOzYO/Ep/b6rgv7Np73wfdnq3/Aib0SFGs1S', 65535)
 ON DUPLICATE KEY UPDATE username=username;
