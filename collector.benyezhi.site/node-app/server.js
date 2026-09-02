@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3001;
 
 // Trust proxy: Needed to retain user IP address for database writes
 app.set('trust proxy', 1);
-// Enable Express JSON parsing
+// Enable Express JSON parsing of text
 app.use(express.json());
 
 const dbConfig = {
