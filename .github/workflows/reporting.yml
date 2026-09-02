@@ -26,7 +26,7 @@ jobs:
           port: ${{ secrets.DEPLOY_PORT }}
           source: "reporting.benyezhi.site/auth/*"
           target: "/var/www/reporting.benyezhi.site/auth"
-          strip_components: 1
+          strip_components: 2
 
       - name: Copy reporting folder to DEPLOY via SCP
         uses: appleboy/scp-action@v0.1.7
@@ -37,7 +37,7 @@ jobs:
           port: ${{ secrets.DEPLOY_PORT }}
           source: "reporting.benyezhi.site/reporting/*"
           target: "/var/www/reporting.benyezhi.site/reporting"
-          strip_components: 1
+          strip_components: 2
 
       - name: Install dependencies & Restart PM2 via SSH
         uses: appleboy/ssh-action@v1.0.3
