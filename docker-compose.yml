@@ -1,3 +1,4 @@
+
 services:
   web:
     build:
@@ -13,9 +14,30 @@ services:
 
   node:
     build:
-      context: ./node-app
+      context: ./reporting.benyezhi.site/node-app
     container_name: cse135-node
+    ports:
+      - "3000:3000"
     volumes:
-      - ./node-app:/app
+      # - ./node-app:/app
       - /app/node_modules
+    env_file:
+      - ./reporting.benyezhi.site/node-app/.env
     restart: unless-stopped
+  
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql_service
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: analytics_db
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: your_actual_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./reporting.benyezhi.site/sql_scripts:/docker-entrypoint-initdb.d:ro
+volumes:
+  mysql_data:
