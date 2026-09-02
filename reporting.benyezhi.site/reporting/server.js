@@ -10,6 +10,10 @@ const { requireAuth, requireAdmin } = require('./middleware/auth');
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+// Same reasoning as auth/app.js -- behind Apache, req.secure is always
+// false unless we trust the proxy's X-Forwarded-Proto header.
+app.set('trust proxy', 1);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.text({ type: ['text/plain', 'application/x-www-form-urlencoded'] }));
