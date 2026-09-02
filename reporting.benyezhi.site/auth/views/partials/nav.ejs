@@ -1,0 +1,76 @@
+<style>
+    .navbar {
+        background: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        height: 60px;
+    }
+
+    .navbar .brand {
+        font-weight: bold;
+        color: #2c3e50;
+        margin-right: 2rem;
+    }
+
+    .navbar .tabs {
+        display: flex;
+        gap: 0.5rem;
+        flex: 1;
+    }
+
+    .navbar .tabs a {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        color: #555;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 0.95rem;
+    }
+
+    .navbar .tabs a:hover {
+        background: #f4f6f8;
+    }
+
+    .navbar .tabs a.active {
+        color: #0066cc;
+        font-weight: bold;
+        background: #eaf2fc;
+    }
+
+    .navbar .user-area {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .navbar .user-area a {
+        color: #0066cc;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .navbar .user-area a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<nav class="navbar">
+    <div style="display:flex; align-items:center;">
+        <span class="brand">Reporting Platform</span>
+        <div class="tabs">
+            <a href="/" class="<%= active === 'dashboard' ? 'active' : '' %>">Dashboard</a>
+            <% if (isAdmin) { %>
+                <a href="/users" class="<%= active === 'users' ? 'active' : '' %>">Users</a>
+            <% } %>
+        </div>
+    </div>
+    <div class="user-area">
+        <span>Signed in as <strong><%= user.username %></strong></span>
+        <a href="/logout">Log Out</a>
+    </div>
+</nav>

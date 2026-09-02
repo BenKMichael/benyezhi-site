@@ -4,61 +4,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Reporting Platform</title>
+    <title>Dashboard - Reporting Platform</title>
     <style>
         body {
             font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
             background: #f4f6f8;
-        }
-
-        .home-card {
-            background: #fff;
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        h2 {
-            margin-top: 0;
             color: #2c3e50;
         }
 
-        p {
-            color: #555;
+        main {
+            padding: 2rem;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .widget {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+
+        .widget h2 {
+            margin-top: 0;
             font-size: 1.1rem;
-            margin-bottom: 2rem;
+            color: #2c3e50;
         }
 
-        .btn-logout {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: #0066cc;
-            color: #fff;
-            text-decoration: none;
+        .widget .placeholder {
+            color: #999;
+            font-size: 0.9rem;
+            padding: 2rem 0;
+            text-align: center;
+            border: 1px dashed #ddd;
             border-radius: 4px;
-            font-weight: bold;
-        }
-
-        .btn-logout:hover {
-            background: #0052a3;
         }
     </style>
 </head>
 
 <body>
-    <div class="home-card">
-        <h2>Welcome, <%= user.username %></h2>
-        <p>You're signed in to the Reporting Platform.</p>
-        <a href="/logout" class="btn-logout">Log Out</a>
-    </div>
+    <%- include('partials/nav', { user: user, isAdmin: isAdmin, active: 'dashboard' }) %>
+
+    <main>
+        <h1>Dashboard</h1>
+        <p>Overview of visitor analytics collected via the reporting API.</p>
+
+        <div class="widget-grid">
+            <div class="widget">
+                <h2>Recent Events</h2>
+                <div class="placeholder">Event data will be loaded here</div>
+            </div>
+            <div class="widget">
+                <h2>Visitor Sessions</h2>
+                <div class="placeholder">Session data will be loaded here</div>
+            </div>
+            <div class="widget">
+                <h2>Device / Browser Breakdown</h2>
+                <div class="placeholder">Static profile data will be loaded here</div>
+            </div>
+        </div>
+    </main>
 </body>
 
 </html>
