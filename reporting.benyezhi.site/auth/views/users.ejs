@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Reporting Platform</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+            color: #2c3e50;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #0066cc;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #0052a3;
+        }
+
+        .btn-danger {
+            background: #d9534f;
+        }
+
+        .btn-danger:hover {
+            background: #c9302c;
+        }
+
+        .btn-small {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            color: #777;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .role-admin {
+            background: #eaf2fc;
+            color: #0066cc;
+        }
+
+        .role-basic {
+            background: #f0f0f0;
+            color: #555;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .actions form {
+            display: inline;
+        }
+
+        .banner {
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .banner-error {
+            background: #fdecea;
+            color: #d9534f;
+        }
+
+        .banner-success {
+            background: #eafaf0;
+            color: #2e8b57;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/nav', { user: user, isAdmin: isAdmin, active: 'users' }) %>
+
+    <main>
+        <div class="page-header">
+            <h1>User Management</h1>
+            <a href="/users/new" class="btn">+ Add User</a>
+        </div>
+        <p>Add, edit, or remove accounts that can sign in to the Reporting Platform.</p>
+
+        <% if (error) { %>
+            <div class="banner banner-error"><%= error %></div>
+        <% } %>
+        <% if (success) { %>
+            <div class="banner banner-success"><%= success %></div>
+        <% } %>
+
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(function(u) { %>
+                        <tr>
+                            <td><%= u.username %></td>
+                            <td><%= u.email %></td>
+                            <td>
+                                <span class="role-badge <%= u.role === ROLES.ADMIN ? 'role-admin' : 'role-basic' %>">
+                                    <%= u.role === ROLES.ADMIN ? 'Admin' : 'Basic' %>
+                                </span>
+                            </td>
+                            <td class="actions">
+                                <a href="/users/<%= u.id %>/edit" class="btn btn-small">Edit</a>
+                                <% if (u.id !== user.id) { %>
+                                    <form action="/users/<%= u.id %>/delete" method="POST"
+                                        onsubmit="return confirm('Remove user &quot;<%= u.username %>&quot;?');">
+                                        <button type="submit" class="btn btn-small btn-danger">Delete</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+
+</html>

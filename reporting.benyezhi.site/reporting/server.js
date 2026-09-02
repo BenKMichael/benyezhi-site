@@ -1,7 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const mysql = require('mysql2/promise');
+const { SESSION_COOKIE_NAME } = require('./config/constants');
+const { requireAuth, requireAdmin } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -9,6 +13,34 @@ const PORT = process.env.PORT || 3002;
 app.use(cors());
 app.use(express.json());
 app.use(express.text({ type: ['text/plain', 'application/x-www-form-urlencoded'] }));
+
+// Same shared sessions table auth writes to -- reporting never creates or
+// modifies a session (reporting_user only has SELECT on it), it just reads
+// whatever auth already put there. clearExpired is off since auth's own
+// store instance already handles pruning expired rows; no need for two
+// services independently doing that (and reporting_user couldn't anyway).
+const sessionStore = new MySQLStore({
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT, 10) || 3306,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    createDatabaseTable: false,
+    clearExpired: false
+});
+
+app.use(session({
+    store: sessionStore,
+    name: SESSION_COOKIE_NAME,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: process.env.COOKIE_SECURE === 'true',
+        maxAge: 24 * 60 * 60 * 1000
+    }
+}));
 
 app.use((req, res, next) => {
     if (typeof req.body === 'string') {
@@ -102,7 +134,7 @@ let mockStaticRecords = [
     }
 ];
 
-app.get('/api/static', async (req, res) => {
+app.get('/api/static', requireAuth, async (req, res) => {
     const limit = Math.min(parseInt(req.query.limit, 10) || 50, 100);
     const offset = parseInt(req.query.offset, 10) || 0;
 
@@ -128,7 +160,7 @@ app.get('/api/static', async (req, res) => {
     }
 });
 
-app.get('/api/static/:identifier', async (req, res) => {
+app.get('/api/static/:identifier', requireAuth, async (req, res) => {
     const { identifier } = req.params;
     const isNumeric = /^\d+$/.test(identifier);
 
@@ -163,7 +195,7 @@ app.get('/api/static/:identifier', async (req, res) => {
     }
 });
 
-app.post('/api/static', async (req, res) => {
+app.post('/api/static', requireAdmin, async (req, res) => {
     const body = req.body || {};
     const sessionId = body.sessionId || body.session_id;
 
@@ -207,7 +239,7 @@ app.post('/api/static', async (req, res) => {
     }
 });
 
-app.delete('/api/static/:id', async (req, res) => {
+app.delete('/api/static/:id', requireAdmin, async (req, res) => {
     const id = parseInt(req.params.id, 10);
     try {
         const [result] = await pool.query("DELETE FROM events WHERE id = ? AND type = 'static'", [id]);
@@ -226,7 +258,7 @@ app.delete('/api/static/:id', async (req, res) => {
     }
 });
 
-app.get('/api/events', async (req, res) => {
+app.get('/api/events', requireAuth, async (req, res) => {
     const { session_id, type, start_time, end_time } = req.query;
     const limit = Math.min(parseInt(req.query.limit, 10) || 50, 100);
     const offset = parseInt(req.query.offset, 10) || 0;
@@ -274,7 +306,7 @@ app.get('/api/events', async (req, res) => {
     }
 });
 
-app.get('/api/session/:sessionId/timeline', async (req, res) => {
+app.get('/api/session/:sessionId/timeline', requireAuth, async (req, res) => {
     const { sessionId } = req.params;
 
     try {
