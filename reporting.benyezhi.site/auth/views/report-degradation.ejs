@@ -244,7 +244,7 @@
                         try {
                             if (item.url.startsWith('http://') || item.url.startsWith('https://')) {
                                 const parsed = new URL(item.url);
-                                return parsed.pathname || '/';
+                                return parsed.host + parsed.pathname;
                             }
                             return item.url;
                         } catch (e) {
@@ -269,7 +269,6 @@
                                         backgroundColor: 'rgba(59, 130, 246, 0.75)',
                                         borderColor: 'rgb(37, 99, 235)',
                                         borderWidth: 1,
-                                        xAxisID: 'x'
                                     },
                                     {
                                         label: 'Unhandled Script Errors Logged',
@@ -277,7 +276,6 @@
                                         backgroundColor: 'rgba(239, 68, 68, 0.85)',
                                         borderColor: 'rgb(220, 38, 38)',
                                         borderWidth: 1,
-                                        xAxisID: 'x1'
                                     }
                                 ]
                             },
@@ -287,7 +285,8 @@
                                 maintainAspectRatio: false,
                                 interaction: {
                                     mode: 'index',
-                                    intersect: false
+                                    intersect: false,
+                                    axis: 'y'
                                 },
                                 scales: {
                                     y: {
