@@ -25,7 +25,7 @@ services:
     volumes:
       - /app/node_modules
     env_file:
-      - ./reporting.benyezhi.site/auth/.env
+      - ./reporting.benyezhi.site/auth/.env.example
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -40,7 +40,7 @@ services:
     volumes:
       - /app/node_modules
     env_file:
-      - ./reporting.benyezhi.site/reporting/.env
+      - ./reporting.benyezhi.site/reporting/.env.example
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -55,7 +55,7 @@ services:
     volumes:
       - /app/node_modules
     env_file:
-      - ./collector.benyezhi.site/node-app/.env
+      - ./collector.benyezhi.site/node-app/.env.example
     depends_on:
       mysql-db:
         condition: service_healthy
