@@ -5,6 +5,7 @@ const MySQLStore = require('express-mysql-session')(session);
 const path = require('path');
 const { SESSION_COOKIE_NAME } = require('./config/constants');
 const authRoutes = require('./routes/authRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
 
@@ -48,6 +49,8 @@ app.use(session({
 }));
 
 app.use('/', authRoutes);
+app.use('/', reportRoutes);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 3000;

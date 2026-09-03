@@ -64,13 +64,17 @@
         <span class="brand">Reporting Platform</span>
         <div class="tabs">
             <a href="/" class="<%= active === 'dashboard' ? 'active' : '' %>">Dashboard</a>
+            <a href="/reports/graceful-degradation" class="<%= active === 'report' ? 'active' : '' %>">Graceful
+                Degradation Report</a>
             <% if (isAdmin) { %>
                 <a href="/users" class="<%= active === 'users' ? 'active' : '' %>">Users</a>
-            <% } %>
+                <% } %>
         </div>
     </div>
     <div class="user-area">
-        <span>Signed in as <strong><%= user.username %></strong></span>
+        <span>Signed in as <strong>
+                <%= user.username %>
+            </strong></span>
         <a href="/logout">Log Out</a>
     </div>
 </nav>

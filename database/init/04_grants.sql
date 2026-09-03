@@ -9,6 +9,7 @@
 CREATE USER IF NOT EXISTS 'auth_user'@'%' IDENTIFIED BY 'auth_password';
 GRANT SELECT, INSERT, UPDATE, DELETE ON analytics_db.users TO 'auth_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON analytics_db.sessions TO 'auth_user'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON analytics_db.events TO 'auth_user'@'%';
 
 -- reporting: reads events, plus the admin add/remove endpoints for
 -- POST/DELETE /api/static. Never touches the users table. Read-only on
