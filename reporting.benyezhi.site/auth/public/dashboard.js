@@ -1,5 +1,7 @@
 (function () {
     const DAYS_SPAN = 7;
+    const POINTS_PER_DAY = 12;
+    const BUCKET_MS = (24 / POINTS_PER_DAY) * 60 * 60 * 1000; // 2-hour buckets
     const TOP_COUNTRIES = 10;
 
     async function fetchJSON(url) {
@@ -17,36 +19,47 @@
         return div.innerHTML;
     }
 
-    // Midnight-aligned Date objects for each of the last DAYS_SPAN days,
-    // oldest first, today last -- used both to bucket data and to make
-    // sure the chart always shows a full week, including zero-visitor days.
-    function getLastNDays(n) {
-        const days = [];
-        for (let i = n - 1; i >= 0; i--) {
-            const d = new Date();
-            d.setHours(0, 0, 0, 0);
-            d.setDate(d.getDate() - i);
-            days.push(d);
-        }
-        return days;
-    }
+    // POINTS_PER_DAY evenly-spaced Date objects per day across the last
+    // DAYS_SPAN days (oldest first), each the start of one BUCKET_MS-wide
+    // window -- used both to bucket data and to make sure the chart always
+    // shows the full week/resolution, including zero-visitor windows.
+    function getBuckets(daysSpan, pointsPerDay) {
+        const start = new Date();
+        start.setHours(0, 0, 0, 0);
+        start.setDate(start.getDate() - (daysSpan - 1));
 
-    function dayKey(date) {
-        return date.toISOString().slice(0, 10); // YYYY-MM-DD
+        const buckets = [];
+        const total = daysSpan * pointsPerDay;
+        for (let i = 0; i < total; i++) {
+            buckets.push(new Date(start.getTime() + i * BUCKET_MS));
+        }
+        return buckets;
     }
 
     function dayLabel(date) {
         return date.toLocaleDateString(undefined, { weekday: 'short', month: 'numeric', day: 'numeric' });
     }
 
-    function bucketUniqueVisitorsByDay(events, days) {
-        const buckets = {};
-        days.forEach(function (d) { buckets[dayKey(d)] = new Set(); });
+    // Only label the first point of each day, so the axis reads as 7 clean
+    // day markers instead of 84 crowded timestamps -- the line itself still
+    // plots at full resolution between them.
+    function bucketLabel(date, indexInDay) {
+        return indexInDay === 0 ? dayLabel(date) : '';
+    }
+
+    function bucketUniqueVisitors(events, buckets) {
+        const sets = buckets.map(function () { return new Set(); });
+        const startMs = buckets[0].getTime();
+        const endMs = startMs + buckets.length * BUCKET_MS;
+
         events.forEach(function (e) {
-            const key = new Date(e.serverTimestamp).toISOString().slice(0, 10);
-            if (buckets[key]) buckets[key].add(e.sessionId);
+            const t = new Date(e.serverTimestamp).getTime();
+            if (t < startMs || t >= endMs) return;
+            const idx = Math.floor((t - startMs) / BUCKET_MS);
+            sets[idx].add(e.sessionId);
         });
-        return days.map(function (d) { return buckets[dayKey(d)].size; });
+
+        return sets.map(function (s) { return s.size; });
     }
 
     function countByCountry(sessions) {
@@ -85,26 +98,46 @@
         return caps;
     }
 
-    function renderVisitorsOverTime(events, days) {
-        const counts = bucketUniqueVisitorsByDay(events, days);
+    function renderVisitorsOverTime(events, buckets) {
+        const counts = bucketUniqueVisitors(events, buckets);
+        const labels = buckets.map(function (d, i) { return bucketLabel(d, i % POINTS_PER_DAY); });
+
         new Chart(document.getElementById('visitorsOverTimeChart'), {
             type: 'line',
             data: {
-                labels: days.map(dayLabel),
+                labels: labels,
                 datasets: [{
                     label: 'Unique visitors',
                     data: counts,
                     borderColor: '#0066cc',
                     backgroundColor: 'rgba(0,102,204,0.1)',
                     fill: true,
-                    tension: 0.2
+                    tension: 0.2,
+                    pointRadius: 2
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                plugins: {
+                    legend: { display: false },
+                    // Most axis labels are blank (only day-starts are
+                    // labeled), so give the tooltip its own full
+                    // date/time regardless of which point is hovered.
+                    tooltip: {
+                        callbacks: {
+                            title: function (items) {
+                                return buckets[items[0].dataIndex].toLocaleString(undefined, {
+                                    weekday: 'short', month: 'numeric', day: 'numeric', hour: 'numeric'
+                                });
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { ticks: { autoSkip: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
             }
         });
     }
@@ -180,8 +213,8 @@
 
     async function init() {
         try {
-            const days = getLastNDays(DAYS_SPAN);
-            const startTime = days[0].toISOString();
+            const buckets = getBuckets(DAYS_SPAN, POINTS_PER_DAY);
+            const startTime = buckets[0].toISOString();
 
             const [eventsRes, staticRes] = await Promise.all([
                 fetchJSON('/api/events?limit=100&start_time=' + encodeURIComponent(startTime)),
@@ -190,7 +223,7 @@
             const events = eventsRes.data || [];
             const sessions = staticRes.data || [];
 
-            renderVisitorsOverTime(events, days);
+            renderVisitorsOverTime(events, buckets);
             renderVisitorLocation(sessions);
             renderCapabilityBreakdown(sessions);
             renderEventsGrid(events);
