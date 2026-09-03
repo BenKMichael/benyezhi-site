@@ -32,12 +32,47 @@ exports.getDegradationReport = async (req, res) => {
             ORDER BY occurrences DESC
             LIMIT 10;
         `);
+
+        const [capabilityRows] = await db.query(`
+            SELECT 
+                session_id,
+                MAX(CASE WHEN data->>'$.cookiesAllowed' = 'true' OR data->>'$.cookiesEnabled' = 'true' THEN 1 ELSE 0 END) AS cookies,
+                MAX(CASE WHEN data->>'$.javascriptAllowed' = 'true' THEN 1 ELSE 0 END) AS js,
+                MAX(CASE WHEN data->>'$.imagesAllowed' = 'true' THEN 1 ELSE 0 END) AS images,
+                MAX(CASE WHEN data->>'$.cssAllowed' = 'true' THEN 1 ELSE 0 END) AS css
+            FROM events
+            WHERE type = 'static'
+            GROUP BY session_id;
+        `);
+
+        const totalSessions = capabilityRows.length || 1;
+        let cookiesCount = 0;
+        let jsCount = 0;
+        let imagesCount = 0;
+        let cssCount = 0;
+
+        capabilityRows.forEach(row => {
+            if (row.cookies) cookiesCount++;
+            if (row.js) jsCount++;
+            if (row.images) imagesCount++;
+            if (row.css) cssCount++;
+        });
+
+        const capabilityPercentages = [
+            Math.round((cookiesCount / totalSessions) * 100),
+            Math.round((jsCount / totalSessions) * 100),
+            Math.round((imagesCount / totalSessions) * 100),
+            Math.round((cssCount / totalSessions) * 100)
+        ];
+
         const user = req.session.user;
         res.render('report-degradation', {
             user,
             isAdmin: user.role === ROLES.ADMIN,
             chartData: chartRows,
-            gridData: gridRows
+            gridData: gridRows,
+            totalSessions: capabilityRows.length,
+            capabilityPercentages
         });
     } catch (err) {
         console.error('Error loading graceful degradation report:', err);

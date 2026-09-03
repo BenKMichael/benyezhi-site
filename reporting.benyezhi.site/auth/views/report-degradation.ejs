@@ -134,7 +134,7 @@
                 </div>
 
                 <div class="section-card">
-                    <h2>1. Client-Side Activity vs. Uncaught Script Errors by Page (Chart)</h2>
+                    <h2>Client-Side Activity vs. Uncaught Script Errors by Page (Chart)</h2>
                     <div id="chart-container" style="position: relative; height: 380px; width: 100%;"
                         data-chart='<%- JSON.stringify(chartData || []) %>'>
                         <canvas id="degradationChart"></canvas>
@@ -142,7 +142,20 @@
                 </div>
 
                 <div class="section-card">
-                    <h2>2. High-Risk Endpoints & Script Exceptions Breakdown (Grid)</h2>
+                    <h2>Browser Capabilities Breakdown</h2>
+                    <div style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">
+                        Assessed across <strong>
+                            <%= totalSessions %>
+                        </strong> recorded session(s).
+                    </div>
+                    <div id="capability-chart-box" style="position: relative; height: 300px; width: 100%;"
+                        data-caps='<%- JSON.stringify(capabilityPercentages || [0, 0, 0, 0]) %>'>
+                        <canvas id="capabilityChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>High-Risk Endpoints & Script Exceptions Breakdown (Grid)</h2>
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -184,7 +197,7 @@
                 </div>
 
                 <div class="section-card">
-                    <h2>3. Written Discussion & Architectural Evaluation</h2>
+                    <h2>Written Discussion & Architectural Evaluation</h2>
                     <div class="discussion-block">
                         <h3>Observed Telemetry Findings</h3>
                         <p>
@@ -318,6 +331,48 @@
                                 }
                             }
                         });
+                    }
+
+                    const capBox = document.getElementById('capability-chart-box');
+                    if (capBox) {
+                        let capData = [0, 0, 0, 0];
+                        try {
+                            capData = JSON.parse(capBox.getAttribute('data-caps') || '[0,0,0,0]');
+                        } catch (e) {
+                            capData = [0, 0, 0, 0];
+                        }
+
+                        const capCanvas = document.getElementById('capabilityChart');
+                        if (capCanvas) {
+                            new Chart(capCanvas.getContext('2d'), {
+                                type: 'bar',
+                                data: {
+                                    labels: ['Cookies', 'JavaScript', 'Images', 'CSS'],
+                                    datasets: [{
+                                        label: '% of sessions allowed',
+                                        data: capData,
+                                        backgroundColor: '#0066cc',
+                                        borderRadius: 4
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            max: 100,
+                                            ticks: {
+                                                callback: function (v) { return v + '%'; }
+                                            }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: { display: false }
+                                    }
+                                }
+                            });
+                        }
                     }
                 })();
             </script>
