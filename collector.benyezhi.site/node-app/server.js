@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2/promise')
+const geoip = require('geoip-lite');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -66,6 +67,18 @@ app.post('/log', async (req, res) => {
 	.slice(0, 19)
 	.replace('T', ' ');
 
+    // Country-level geolocation, only for the once-per-session "static"
+    // event -- no need to look it up again for every click/scroll from the
+    // same visitor. geoip-lite works off a bundled offline database (no
+    // API key, no network call), so this can't fail from an external
+    // service being down; it just returns null for IPs it can't resolve
+    // (private/reserved ranges, like Docker's internal network locally).
+    let data = payload.data || {};
+    if (payload.type === 'static') {
+        const geo = geoip.lookup(req.ip);
+        data = { ...data, country: geo ? geo.country : null };
+    }
+
     try {
         await pool.execute(
             `INSERT INTO events
@@ -86,7 +99,7 @@ app.post('/log', async (req, res) => {
                 clientTimestamp,
                 serverTimestamp,
                 req.ip,
-                JSON.stringify(payload.data || {})
+                JSON.stringify(data)
             ]
         );
         res.sendStatus(204);

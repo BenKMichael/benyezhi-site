@@ -117,6 +117,7 @@ function formatEventAsStatic(row) {
         screenDimensions: data.screenDimensions,
         windowDimensions: data.windowDimensions,
         networkConnection: data.networkConnection,
+        country: data.country || null,
         createdAt: row.server_timestamp
     };
 }
@@ -139,13 +140,26 @@ let mockStaticRecords = [
 ];
 
 app.get('/api/static', requireAuth, async (req, res) => {
+    const { start_time, end_time } = req.query;
     const limit = Math.min(parseInt(req.query.limit, 10) || 50, 100);
     const offset = parseInt(req.query.offset, 10) || 0;
 
+    let conditions = ["type = 'static'"];
+    let params = [];
+    if (start_time) {
+        conditions.push('server_timestamp >= ?');
+        params.push(start_time);
+    }
+    if (end_time) {
+        conditions.push('server_timestamp <= ?');
+        params.push(end_time);
+    }
+    params.push(limit, offset);
+
     try {
         const [rows] = await pool.query(
-            "SELECT * FROM events WHERE type = 'static' ORDER BY id DESC LIMIT ? OFFSET ?",
-            [limit, offset]
+            `SELECT * FROM events WHERE ${conditions.join(' AND ')} ORDER BY id DESC LIMIT ? OFFSET ?`,
+            params
         );
         return res.status(200).json({
             status: 'success',

@@ -22,28 +22,43 @@
             margin-top: 0;
         }
 
-        .widget-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
         .widget {
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
-        }
-
-        .widget.wide {
-            grid-column: 1 / -1;
+            margin-top: 1.5rem;
         }
 
         .widget h2 {
             margin-top: 0;
             font-size: 1.1rem;
             color: #2c3e50;
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .chart-row .widget {
+            margin-top: 0;
+        }
+
+        /* ~1/4 of a 1080p display's height (1080 / 4 = 270px) -- Chart.js
+           derives canvas height from its container when
+           maintainAspectRatio: false is set, so this is the actual cap. */
+        .chart-container {
+            position: relative;
+            height: 270px;
+        }
+
+        @media (max-width: 700px) {
+            .chart-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         table {
@@ -80,54 +95,61 @@
 
     <main>
         <h1>Dashboard</h1>
-        <p>Overview of visitor analytics collected via the reporting API.</p>
+        <p>Overview of visitor analytics collected via the reporting API, last 7 days.</p>
 
-        <div class="widget-grid">
-            <div class="widget">
-                <h2>Events Over Time</h2>
-                <canvas id="eventsOverTimeChart"></canvas>
+        <div class="widget">
+            <h2>Visitors Over Time</h2>
+            <div class="chart-container">
+                <canvas id="visitorsOverTimeChart"></canvas>
             </div>
+        </div>
+
+        <div class="chart-row">
             <div class="widget">
-                <h2>Event Type Breakdown</h2>
-                <canvas id="eventTypeChart"></canvas>
+                <h2>Visitor Location</h2>
+                <div class="chart-container">
+                    <canvas id="locationChart"></canvas>
+                </div>
             </div>
             <div class="widget">
                 <h2>Browser Capabilities</h2>
-                <canvas id="capabilityChart"></canvas>
-            </div>
-
-            <div class="widget wide">
-                <h2>Recent Events</h2>
-                <div class="table-wrap">
-                    <table id="eventsGrid">
-                        <thead>
-                            <tr>
-                                <th>Session</th>
-                                <th>Type</th>
-                                <th>URL</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                <div class="chart-container">
+                    <canvas id="capabilityChart"></canvas>
                 </div>
             </div>
+        </div>
 
-            <div class="widget wide">
-                <h2>Recent Sessions</h2>
-                <div class="table-wrap">
-                    <table id="sessionsGrid">
-                        <thead>
-                            <tr>
-                                <th>Session</th>
-                                <th>User Agent</th>
-                                <th>Language</th>
-                                <th>Created</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+        <div class="widget">
+            <h2>Recent Events</h2>
+            <div class="table-wrap">
+                <table id="eventsGrid">
+                    <thead>
+                        <tr>
+                            <th>Session</th>
+                            <th>Type</th>
+                            <th>URL</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="widget">
+            <h2>Recent Sessions</h2>
+            <div class="table-wrap">
+                <table id="sessionsGrid">
+                    <thead>
+                        <tr>
+                            <th>Session</th>
+                            <th>User Agent</th>
+                            <th>Country</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </main>
