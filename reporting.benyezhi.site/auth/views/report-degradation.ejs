@@ -199,35 +199,16 @@
                 <div class="section-card">
                     <h2>Written Discussion & Architectural Evaluation</h2>
                     <div class="discussion-block">
-                        <h3>Observed Telemetry Findings</h3>
                         <p>
-                            Across monitored routes, client telemetry captures thousands of interactive DOM events
-                            (clicks, keypresses, and batch activity), demonstrating substantial reliance on client-side
-                            JavaScript for regular user engagement. Concurrently, our logging endpoints intercepted
-                            unhandled
-                            runtime script exceptions (such as property resolution errors or asset delivery timeouts).
-                            In a single-page
-                            or client-heavy setup lacking fallback handling, an unhandled exception halts script
-                            execution,
-                            rendering buttons and forms completely unresponsive.
-                        </p>
-
-                        <h3>Definitive Answer to the Guiding Question</h3>
-                        <p>
-                            <strong>Yes, our platform should strictly implement graceful degradation.</strong> While
-                            analytics collectors inherently require JavaScript to log client health, real-world user
-                            environments
-                            are volatile—impacted by browser extensions, strict corporate firewalls, disabled scripting,
-                            and
-                            partial packet dropouts on mobile connections.
-                        </p>
-                        <p>
-                            To insulate end users from total workflow obstruction, all primary workflows (specifically
-                            authentication and form submissions) must rely on standard, native HTML
-                            <code>&lt;form action="..." method="POST"&gt;</code> actions with server-side rendering,
-                            supplemented by <code>&lt;noscript&gt;</code> advisories. Client-side JavaScript should
-                            enhance the experience progressively, but never serve as a single point of operational
-                            failure.
+                            Yes (Assuming collected data was valid and from real users). 
+                            The primary data point we collected was the whether or not the user has JS enabled/working on their client. 
+                            We did this via a tracking pixel embedded in every page in test.benyezhi.site (via <noscript><img> + GET request). 
+                            This gave us a "JS capability" flag associated with each session. 
+                            This data point along with cookie, image, and CSS capabilities across all users, was aggregated into a barchart. 
+                            The ratio of users that can even render our JS served data is the most important piece of data we can collect regarding our guiding question which is given by the height of a capabilities corresponding height (0-100%). 
+                            The actual data, however, is fudged, due to our lack of users as well as testing during development, but if we took this data at face value, only about 30-40% of our users can properly render the JS on our website which would be a strong argument for more robust <noscript> handling and general "graceful degradation" guided design. 
+                            Client side activity vs script errors was a secondary data point used to capture if users encountered JS related issues given they could run JS in the first place. 
+                            The ratio of activity vs errors gives a sense of how many issues are occuring vs the interactions occuring on the site.
                         </p>
                     </div>
                 </div>

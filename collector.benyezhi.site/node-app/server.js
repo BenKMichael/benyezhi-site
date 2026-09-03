@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2/promise')
 const geoip = require('geoip-lite');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -107,6 +108,55 @@ app.post('/log', async (req, res) => {
         console.error('Database error:', err);
         res.sendStatus(500);
     }
+});
+
+// Fires only for visitors whose browser never ran collector.js (JS off, or
+// the script got blocked) -- see the <noscript> pixel on each page. An
+// <img> tag can only send a GET with no body, so this can't reuse /log's
+// JSON payload; it takes the page URL as a query param and writes a
+// minimal "static" event by hand instead.
+app.get('/log-noscript', async (req, res) => {
+    const url = req.query.url;
+
+    const serverTimestamp = new Date()
+        .toISOString()
+        .slice(0, 19)
+        .replace('T', ' ');
+
+    if (url) {
+        const geo = geoip.lookup(req.ip);
+        const data = {
+            javascriptAllowed: false,
+            // The pixel only loads if images are allowed, so this much we
+            // do know for sure -- cookies/CSS can't be inferred without JS,
+            // so they're left out rather than guessed.
+            imagesAllowed: true,
+            userAgent: req.headers['user-agent'] || null,
+            language: (req.headers['accept-language'] || '').split(',')[0] || null,
+            country: geo ? geo.country : null
+        };
+
+        try {
+            // events.session_id is NOT NULL, and there's no client-side JS
+            // here to generate one via sessionStorage like collector.js
+            // does -- a fresh id per hit is fine since there's no way to
+            // recognize the same no-JS visitor across page loads anyway.
+            const sessionId = 'noscript_' + crypto.randomUUID();
+            await pool.execute(
+                `INSERT INTO events (session_id, type, url, client_timestamp, server_timestamp, ip, data)
+                VALUES (?, 'static', ?, ?, ?, ?, ?)`,
+                [sessionId, url, serverTimestamp, serverTimestamp, req.ip, JSON.stringify(data)]
+            );
+        } catch (err) {
+            console.error('Database error (noscript):', err);
+        }
+    }
+
+    // Always respond with a real 1x1 gif so the <img> never shows a
+    // broken-image icon, regardless of whether the insert above worked.
+    res.set('Content-Type', 'image/gif');
+    res.set('Cache-Control', 'no-store');
+    res.send(Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64'));
 });
 
 app.listen(PORT, () => {
