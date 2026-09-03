@@ -202,11 +202,11 @@
                         <p>
                             Yes (Assuming collected data was valid and from real users). 
                             The primary data point we collected was the whether or not the user has JS enabled/working on their client. 
-                            We did this via a tracking pixel embedded in every page in test.benyezhi.site (via <noscript><img> + GET request). 
+                            We did this via a tracking pixel embedded in every page in test.benyezhi.site (via noscript + img + GET request). 
                             This gave us a "JS capability" flag associated with each session. 
                             This data point along with cookie, image, and CSS capabilities across all users, was aggregated into a barchart. 
                             The ratio of users that can even render our JS served data is the most important piece of data we can collect regarding our guiding question which is given by the height of a capabilities corresponding height (0-100%). 
-                            The actual data, however, is fudged, due to our lack of users as well as testing during development, but if we took this data at face value, only about 30-40% of our users can properly render the JS on our website which would be a strong argument for more robust <noscript> handling and general "graceful degradation" guided design. 
+                            The actual data, however, is fudged, due to our lack of users as well as testing during development, but if we took this data at face value, only about 30-40% of our users can properly render the JS on our website which would be a strong argument for more robust noscript handling and general "graceful degradation" guided design. 
                             Client side activity vs script errors was a secondary data point used to capture if users encountered JS related issues given they could run JS in the first place. 
                             The ratio of activity vs errors gives a sense of how many issues are occuring vs the interactions occuring on the site.
                         </p>
