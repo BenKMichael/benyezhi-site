@@ -1,0 +1,47 @@
+name: Deploy App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy app to server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          source: "app/*"
+          target: "/var/www/app"
+          strip_components: 1
+
+      - name: Install dependencies & restart PM2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          APP_ENV: ${{ secrets.APP_ENV }}
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          envs: APP_ENV
+          script: |
+            cd /var/www/app
+            echo "$APP_ENV" > .env
+            chmod 600 .env
+            npm ci --omit=dev
+            pm2 delete cse135-app || true
+            pm2 start src/server.js --name cse135-app
+            pm2 save

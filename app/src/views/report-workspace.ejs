@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeLabel %> - Create Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+            color: #2c3e50;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .range {
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            padding: 0.55rem 1rem;
+            background: #0066cc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #0052a3;
+        }
+
+        .btn-secondary {
+            background: #eee;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #ddd;
+        }
+
+        .blocks {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .chart-block {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .chart-block--full {
+            flex-direction: column;
+        }
+
+        .chart-block--half {
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .chart-block--half .chart-side,
+        .chart-block--half .comment {
+            flex: 1 1 320px;
+        }
+
+        .chart-block h3 {
+            margin: 0 0 0.75rem 0;
+            font-size: 1.05rem;
+        }
+
+        .chart-wrap {
+            position: relative;
+            height: 320px;
+        }
+
+        .chart-block--full .chart-wrap {
+            height: 360px;
+        }
+
+        .comment label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #777;
+            margin-bottom: 0.4rem;
+        }
+
+        .comment textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0.6rem;
+            font: inherit;
+            resize: vertical;
+        }
+
+        .comment textarea[readonly] {
+            background: #f7f7f7;
+            color: #444;
+        }
+
+        .comment-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .comment-actions button {
+            padding: 0.35rem 0.9rem;
+            font-size: 0.85rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/nav', { user: user, can: can, active: 'create' }) %>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <h1><%= typeLabel %></h1>
+                <div class="range" id="range-label"></div>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn btn-secondary" id="download-report">Download PDF</button>
+                <button type="button" class="btn" id="save-report">Save Report</button>
+            </div>
+        </div>
+
+        <div class="blocks">
+            <% payload.specs.forEach(function (spec) { %>
+                <div class="chart-block chart-block--<%= spec.width %>">
+                    <div class="chart-side">
+                        <h3><%= spec.title %></h3>
+                        <div class="chart-wrap">
+                            <canvas id="chart-<%= spec.key %>"></canvas>
+                        </div>
+                    </div>
+                    <div class="comment" data-key="<%= spec.key %>">
+                        <label>Analyst notes</label>
+                        <textarea rows="5" readonly placeholder="No notes yet."></textarea>
+                        <div class="comment-actions">
+                            <button type="button" class="btn-edit">Edit</button>
+                            <button type="button" class="btn-save" hidden>Save</button>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+
+    <script id="report-data" type="application/json"><%- jsonForHtml(payload) %></script>
+    <script src="/report-pdf.js"></script>
+    <script src="/report-workspace.js"></script>
+</body>
+
+</html>

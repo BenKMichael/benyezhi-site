@@ -9,7 +9,6 @@ on:
       - 'benyezhi.site/perl-cgi/**'
       - 'benyezhi.site/php-cgi/**'
       - 'benyezhi.site/go-cgi/**'
-      - 'benyezhi.site/node-app/**'
   workflow_dispatch:
 
 
@@ -25,7 +24,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22'
-      
+
       - name: Build GO CGI Binaries
         run: |
           mkdir -p go_output
@@ -47,33 +46,22 @@ jobs:
           mkdir -p deploy_pkg/html
           mkdir -p deploy_pkg/cgi-bin
 
-          # copy static files
           if [ -d "benyezhi.site/html" ]; then
             cp -r benyezhi.site/html/. deploy_pkg/html/
             echo "Copied static files."
           fi
 
-          # copy perl files
           if [ -d "benyezhi.site/perl-cgi" ]; then
             cp -r benyezhi.site/perl-cgi/. deploy_pkg/cgi-bin/
             echo "Copied perl files."
           fi
 
-          # copy php files
           if [ -d "benyezhi.site/php-cgi" ]; then
             cp -r benyezhi.site/php-cgi/. deploy_pkg/cgi-bin/
             echo "Copied PHP files."
           fi
 
-          # copy go files
           cp -r go_output/. deploy_pkg/cgi-bin/
-
-          # copy node app files
-          if [ -d "benyezhi.site/node-app" ]; then
-            mkdir -p deploy_pkg/node-app
-            cp -r benyezhi.site/node-app/. deploy_pkg/node-app/
-            echo "Copied Node.js app files."
-          fi
 
       - name: Deploy via SSH
         uses: easingthemes/ssh-deploy@v5.0.3
@@ -91,14 +79,5 @@ jobs:
             cp -r /tmp/deploy_pkg/cgi-bin/* /var/www/html/cgi-bin/
             chmod +x /var/www/html/cgi-bin/*
 
-            echo "Deploying Node.js app..."
-            mkdir -p ~/benyezhi-site/node-app
-            cp -r /tmp/deploy_pkg/node-app/* ~/benyezhi-site/node-app/
-            cd ~/benyezhi-site/node-app
-            npm ci --omit=dev
-            pm2 restart node-app || pm2 start server.js --name node-app
-            pm2 save
-
             rm -rf /tmp/deploy_pkg
             echo "Deploy finished!"
-

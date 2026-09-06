@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeLabel %> - Report Download</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 3rem;
+            background: #f4f6f8;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .render-area {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 900px;
+        }
+
+        .chart-wrap {
+            position: relative;
+            height: 360px;
+            width: 900px;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="status">Preparing your PDF&hellip;</p>
+
+    <div class="render-area" id="render-area">
+        <% payload.specs.forEach(function (spec) { %>
+            <div class="chart-wrap">
+                <canvas id="chart-<%= spec.key %>"></canvas>
+            </div>
+        <% }); %>
+    </div>
+
+    <script id="report-data" type="application/json"><%- jsonForHtml(payload) %></script>
+    <script src="/report-pdf.js"></script>
+    <script src="/report-print.js"></script>
+</body>
+
+</html>
