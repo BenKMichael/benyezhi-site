@@ -12,7 +12,7 @@
         charts[spec.key] = window.reportPdf.drawChart(
             'chart-' + spec.key,
             spec,
-            payload.charts[spec.key] || { labels: [], values: [] }
+            payload.charts[spec.key] || { labels: [], values: [], points: [] }
         );
     });
 

@@ -79,7 +79,7 @@ Two layers:
 
 `config/roles.js`-style registry in `lib/reportCategories.js` defines 4 categories
 (`audience`, `performance`, `engagement`, `journey`), each with 3 chart specs
-(`{ key, title, kind: bar|hbar, width: full|half }`) and a `build(start, end)` that
+(`{ key, title, kind: bar|hbar|pie|line|scatter, width: full|half }`) and a `build(start, end)` that
 runs its 3 queries from `models/analyticsModel.js` over the last 7 days.
 
 The create workspace (`report-workspace.js`) draws the charts, holds per-chart

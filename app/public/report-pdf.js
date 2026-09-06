@@ -17,9 +17,86 @@
     };
 
     function drawChart(canvasId, spec, series) {
+        const ctx = document.getElementById(canvasId);
+
+        if (spec.kind === 'pie') {
+            const values = series.values || [];
+            return new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: series.labels || [],
+                    datasets: [{
+                        label: spec.title,
+                        data: values,
+                        backgroundColor: values.map(function (_, i) { return PALETTE[i % PALETTE.length]; })
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: { legend: { display: true, position: 'right' } }
+                },
+                plugins: [WHITE_BG]
+            });
+        }
+
+        if (spec.kind === 'line') {
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: series.labels || [],
+                    datasets: [{
+                        label: spec.title,
+                        data: series.values || [],
+                        borderColor: PALETTE[0],
+                        backgroundColor: PALETTE[0] + '33',
+                        pointBackgroundColor: PALETTE[0],
+                        fill: true,
+                        tension: 0.25
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true }
+                    }
+                },
+                plugins: [WHITE_BG]
+            });
+        }
+
+        if (spec.kind === 'scatter') {
+            return new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: spec.title,
+                        data: series.points || [],
+                        backgroundColor: PALETTE[0]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, title: { display: !!spec.xLabel, text: spec.xLabel } },
+                        y: { beginAtZero: true, title: { display: !!spec.yLabel, text: spec.yLabel } }
+                    }
+                },
+                plugins: [WHITE_BG]
+            });
+        }
+
         const horizontal = spec.kind === 'hbar';
         const values = series.values || [];
-        return new Chart(document.getElementById(canvasId), {
+        return new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: series.labels || [],

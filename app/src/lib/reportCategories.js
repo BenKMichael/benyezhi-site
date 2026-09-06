@@ -7,21 +7,34 @@ function series(rows) {
   };
 }
 
+function points(rows) {
+  return {
+    points: rows.map((r) => ({ x: Number(r.x) || 0, y: Number(r.y) || 0 }))
+  };
+}
+
 const CATEGORIES = {
   audience: {
     label: 'Audience & Technology',
     charts: [
-      { key: 'countries', title: 'Sessions by Country (Top 15)', kind: 'hbar', width: 'full' },
-      { key: 'screens', title: 'Screen Size Class', kind: 'bar', width: 'half' },
-      { key: 'browsers', title: 'Browser Family', kind: 'bar', width: 'half' }
+      { key: 'countries', title: 'Sessions by Country (Top 15)', kind: 'pie', width: 'full' },
+      { key: 'browsers', title: 'Browser Family', kind: 'pie', width: 'half' },
+      { key: 'screens', title: 'Screen Resolution', kind: 'scatter', width: 'half', xLabel: 'Width (px)', yLabel: 'Height (px)' },
+      { key: 'visitorsOverTime', title: 'Visitors Over Time', kind: 'line', width: 'full' }
     ],
     async build(start, end) {
-      const [countries, screens, browsers] = await Promise.all([
+      const [countries, browsers, screens, visitorsOverTime] = await Promise.all([
         a.audienceCountries(start, end),
-        a.audienceScreenClasses(start, end),
-        a.audienceBrowsers(start, end)
+        a.audienceBrowsers(start, end),
+        a.audienceScreenResolution(start, end),
+        a.audienceVisitorsOverTime(start, end)
       ]);
-      return { countries: series(countries), screens: series(screens), browsers: series(browsers) };
+      return {
+        countries: series(countries),
+        browsers: series(browsers),
+        screens: points(screens),
+        visitorsOverTime: series(visitorsOverTime)
+      };
     }
   },
 
@@ -82,7 +95,11 @@ function exists(type) {
 }
 
 function list() {
-  return Object.keys(CATEGORIES).map((key) => ({ key, label: CATEGORIES[key].label }));
+  return Object.keys(CATEGORIES).map((key) => ({
+    key,
+    label: CATEGORIES[key].label,
+    chartCount: CATEGORIES[key].charts.length
+  }));
 }
 
 module.exports = { CATEGORIES, exists, list };
