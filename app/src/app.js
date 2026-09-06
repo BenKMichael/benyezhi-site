@@ -24,6 +24,19 @@ app.use(sessionMiddleware);
 app.use(loadUser);
 app.use('/', routes);
 
+app.use((req, res) => {
+  if (req.originalUrl.startsWith('/api/')) {
+    return res.status(404).json({ status: 'error', message: 'Not found' });
+  }
+  res.status(404).render('error', {
+    code: 404,
+    title: 'Page Not Found',
+    message: "The page you're looking for doesn't exist.",
+    backHref: '/',
+    backLabel: 'Go Home'
+  });
+});
+
 app.use(errorHandler);
 
 module.exports = app;
