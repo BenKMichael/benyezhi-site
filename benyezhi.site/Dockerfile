@@ -39,5 +39,5 @@ COPY --from=go-builder /out/ /usr/bin/cgi-bin/
 RUN chmod +x /usr/bin/cgi-bin/* && \
     chown -R www-data:www-data /var/www/html /usr/bin/cgi-bin
 
-EXPOSE 80
+EXPOSE 80 81 82
 CMD ["apache2-foreground"]

@@ -1,0 +1,28 @@
+name: Collector Site
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'collector.benyezhi.site/**'
+  workflow_dispatch:
+
+jobs:
+  build-collector-site:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          source: "collector.benyezhi.site/*"
+          target: "/var/www/collector.benyezhi.site/html"
+          strip_components: 1

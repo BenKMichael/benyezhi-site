@@ -1,4 +1,3 @@
-
 services:
   web:
     build:
@@ -8,54 +7,23 @@ services:
     ports:
       - "8080:80"
       - "8081:81"
+      - "8082:82"
     volumes:
       - ./benyezhi.site/html:/var/www/html:ro
+      - ./collector.benyezhi.site:/var/www/collector:ro
       - ./benyezhi.site/apache.conf:/etc/apache2/sites-available/000-default.conf:ro
     depends_on:
-      - auth
-      - reporting
+      - app
     restart: unless-stopped
 
-  auth:
+  app:
     build:
-      context: ./reporting.benyezhi.site/auth
-    container_name: cse135-auth
+      context: ./app
+    container_name: cse135-app
     ports:
       - "3000:3000"
-    volumes:
-      - /app/node_modules
     env_file:
-      - ./reporting.benyezhi.site/auth/.env.example
-    depends_on:
-      mysql-db:
-        condition: service_healthy
-    restart: unless-stopped
-
-  reporting:
-    build:
-      context: ./reporting.benyezhi.site/reporting
-    container_name: cse135-reporting
-    ports:
-      - "3002:3002"
-    volumes:
-      - /app/node_modules
-    env_file:
-      - ./reporting.benyezhi.site/reporting/.env.example
-    depends_on:
-      mysql-db:
-        condition: service_healthy
-    restart: unless-stopped
-
-  collector:
-    build:
-      context: ./collector.benyezhi.site/node-app
-    container_name: cse135-collector
-    ports:
-      - "3001:3001"
-    volumes:
-      - /app/node_modules
-    env_file:
-      - ./collector.benyezhi.site/node-app/.env.example
+      - ./app/.env.example
     depends_on:
       mysql-db:
         condition: service_healthy
