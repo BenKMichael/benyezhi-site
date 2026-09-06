@@ -36,7 +36,7 @@ Static content deploys separately: `deploy.yml` (benyezhi.site static + CGI),
      `/log-noscript` to `127.0.0.1:3000`
    - `benyezhi.site` — proxy `/node/`, `/api`, `/reporting/` to `127.0.0.1:3000`
 
-3. Remove the old PM2 processes: `pm2 delete reporting-auth reporting-api collector-api`.
+3. Remove the old PM2 processes: `pm2 delete reporting-auth reporting-api collector-api node-app` (the last is the former benyezhi.site demo server — its `/node/*` endpoints are now in the unified app; leaving it running holds port 3000 and crash-loops `cse135-app`). Then `pm2 save`.
 4. Drop the `sessions` table (no longer used) and ensure the DB user matches
    `database/init/04_grants.sql` (SELECT/INSERT/UPDATE/DELETE on `users` + `events`).
 5. Run `database/migrations/001_role_slugs.sql` once to convert the numeric
