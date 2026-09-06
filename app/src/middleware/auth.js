@@ -46,7 +46,13 @@ function requirePermission(permission) {
     if (!req.user) {
       return res.redirect('/login');
     }
-    return res.status(403).send('Forbidden');
+    return res.status(403).render('error', {
+      code: 403,
+      title: 'Forbidden',
+      message: "You don't have permission to view this page.",
+      backHref: '/',
+      backLabel: 'Go Home'
+    });
   };
 }
 
