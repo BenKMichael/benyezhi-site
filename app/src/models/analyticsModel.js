@@ -15,25 +15,27 @@ async function audienceCountries(start, end) {
   return rows;
 }
 
-async function audienceScreenClasses(start, end) {
+async function audienceScreenResolution(start, end) {
   const [rows] = await pool.query(
-    `SELECT class AS label, COUNT(*) AS value
-     FROM (
-       SELECT CASE
-         WHEN w < 768 THEN 'Mobile'
-         WHEN w < 1025 THEN 'Tablet'
-         WHEN w < 1441 THEN 'Laptop'
-         ELSE 'Desktop'
-       END AS class
-       FROM (
-         SELECT CAST(data->>'$.screenDimensions.width' AS UNSIGNED) AS w
-         FROM events
-         WHERE type = 'static' AND ${WINDOW}
-           AND data->>'$.screenDimensions.width' IS NOT NULL
-       ) widths
-     ) classes
-     GROUP BY class
-     ORDER BY FIELD(class, 'Mobile', 'Tablet', 'Laptop', 'Desktop')`,
+    `SELECT CAST(data->>'$.screenDimensions.width' AS UNSIGNED) AS x,
+            CAST(data->>'$.screenDimensions.height' AS UNSIGNED) AS y
+     FROM events
+     WHERE type = 'static' AND ${WINDOW}
+       AND data->>'$.screenDimensions.width' IS NOT NULL
+       AND data->>'$.screenDimensions.height' IS NOT NULL
+     LIMIT 2000`,
+    [start, end]
+  );
+  return rows;
+}
+
+async function audienceVisitorsOverTime(start, end) {
+  const [rows] = await pool.query(
+    `SELECT DATE_FORMAT(server_timestamp, '%Y-%m-%d') AS label, COUNT(DISTINCT session_id) AS value
+     FROM events
+     WHERE ${WINDOW}
+     GROUP BY label
+     ORDER BY label ASC`,
     [start, end]
   );
   return rows;
@@ -268,7 +270,8 @@ async function journeyBounceRate(start, end) {
 
 module.exports = {
   audienceCountries,
-  audienceScreenClasses,
+  audienceScreenResolution,
+  audienceVisitorsOverTime,
   audienceBrowsers,
   perfLoadBuckets,
   perfSlowestPages,
